@@ -1,0 +1,4 @@
+[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	(D:\STUDY\Masters\Term 1\APP SOEN 6441\Project\APP_Gitterific\gitterific\conf\application.conf,D:\STUDY\Masters\Term 1\APP SOEN 6441\Project\APP_Gitterific\gitterific\target\scala-2.13\classes\application.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(D:\STUDY\Masters\Term 1\APP SOEN 6441\Project\APP_Gitterific\gitterific\conf\logback.xml,D:\STUDY\Masters\Term 1\APP SOEN 6441\Project\APP_Gitterific\gitterific\target\scala-2.13\classes\logback.xml)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(D:\STUDY\Masters\Term 1\APP SOEN 6441\Project\APP_Gitterific\gitterific\conf\routes,D:\STUDY\Masters\Term 1\APP SOEN 6441\Project\APP_Gitterific\gitterific\target\scala-2.13\classes\routes)[0m
