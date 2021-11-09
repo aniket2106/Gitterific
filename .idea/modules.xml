@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/gitterific/.g8/.g8.iml" filepath="$PROJECT_DIR$/gitterific/.g8/.g8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/APP_Gitterific.iml" filepath="$PROJECT_DIR$/.idea/APP_Gitterific.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gitterific/gitterific.iml" filepath="$PROJECT_DIR$/gitterific/gitterific.iml" />
+    </modules>
+  </component>
+</project>
