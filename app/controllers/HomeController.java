@@ -1,8 +1,5 @@
 package controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import play.mvc.*;
 
 /**
@@ -11,8 +8,6 @@ import play.mvc.*;
  */
 public class HomeController extends Controller {
 
-    final Logger logger = LoggerFactory.getLogger("play");
-
     /**
      * An action that renders an HTML page with a welcome message.
      * The configuration in the <code>routes</code> file means that
@@ -20,7 +15,6 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-        logger.info("working");
         return ok(views.html.index.render());
     }
 
