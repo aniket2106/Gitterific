@@ -18,9 +18,9 @@ package controllers {
 
   
     // @LINE:6
-    def index(): Call = {
+    def index(searchKeyword:String = ""): Call = {
       
-      Call("GET", _prefix)
+      Call("GET", _prefix + play.core.routing.queryString(List(if(searchKeyword == "") None else Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("searchKeyword", searchKeyword)))))
     }
   
   }

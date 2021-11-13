@@ -22,8 +22,8 @@ package controllers.javascript {
     def index: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.HomeController.index",
       """
-        function() {
-          return _wA({method:"GET", url:"""" + _prefix + """"})
+        function(searchKeyword0) {
+          return _wA({method:"GET", url:"""" + _prefix + """" + _qS([(searchKeyword0 == null ? null : (""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("searchKeyword", searchKeyword0))])})
         }
       """
     )

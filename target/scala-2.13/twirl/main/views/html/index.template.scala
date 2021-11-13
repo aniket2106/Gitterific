@@ -29,12 +29,13 @@ object index extends _root_.play.twirl.api.BaseScalaTemplate[play.twirl.api.Html
       {
 
 
-Seq[Any](format.raw/*2.1*/("""
+Seq[Any](format.raw/*1.4*/("""
+
 """),_display_(/*3.2*/main("Gitterific")/*3.20*/ {_display_(Seq[Any](format.raw/*3.22*/("""
 """),format.raw/*4.1*/("""<center>
   	<h1>Welcome to Gitterific!</h1>
   		<form action="/" method="get">
-  			<input type="text" name="searchKeyword" placeholder="Please search here" />
+  			<input type="text" name="searchKeyword" placeholder="Please Search Here" />
   			<input type="submit" name="Search" />
   		</form>
  </center>
@@ -56,9 +57,9 @@ Seq[Any](format.raw/*2.1*/("""
               /*
                   -- GENERATED --
                   SOURCE: app/views/index.scala.html
-                  HASH: 390e947d05eff8bf947712b7d5a86e5282fa1841
-                  MATRIX: 900->1|996->4|1023->6|1049->24|1088->26|1115->27|1372->254
-                  LINES: 27->1|32->2|33->3|33->3|33->3|34->4|41->11
+                  HASH: 8941165ce9a7555dd0bef0e72d58af98710a6693
+                  MATRIX: 900->1|996->3|1026->8|1052->26|1091->28|1119->30|1383->264
+                  LINES: 27->1|32->1|34->3|34->3|34->3|35->4|42->11
                   -- GENERATED --
               */
           
