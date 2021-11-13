@@ -29,8 +29,7 @@ object index extends _root_.play.twirl.api.BaseScalaTemplate[play.twirl.api.Html
       {
 
 
-Seq[Any](format.raw/*1.4*/("""
-
+Seq[Any](format.raw/*2.1*/("""
 """),_display_(/*3.2*/main("Gitterific")/*3.20*/ {_display_(Seq[Any](format.raw/*3.22*/("""
 """),format.raw/*4.1*/("""<center>
   	<h1>Welcome to Gitterific!</h1>
@@ -57,9 +56,9 @@ Seq[Any](format.raw/*1.4*/("""
               /*
                   -- GENERATED --
                   SOURCE: app/views/index.scala.html
-                  HASH: 8941165ce9a7555dd0bef0e72d58af98710a6693
-                  MATRIX: 900->1|996->3|1026->8|1052->26|1091->28|1119->30|1383->264
-                  LINES: 27->1|32->1|34->3|34->3|34->3|35->4|42->11
+                  HASH: 054e957445103c8b98aa99f2279c79cd5e6445ac
+                  MATRIX: 900->1|996->4|1023->6|1049->24|1088->26|1115->27|1372->254
+                  LINES: 27->1|32->2|33->3|33->3|33->3|34->4|41->11
                   -- GENERATED --
               */
           

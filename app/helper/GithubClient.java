@@ -28,7 +28,7 @@ public class GithubClient implements WSBodyReadables, WSBodyWritables  {
 		.url(BASE_URL + "search/repositories")
 		.addQueryParameter("sort", "updated")
 		.addQueryParameter("order", "desc")
-		.addQueryParameter("per_page", "2")
+		.addQueryParameter("per_page", "10")
 		.addQueryParameter("q", searchKey);
 		
 		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, SearchResults.class)).toCompletableFuture();
