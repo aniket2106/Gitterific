@@ -1,6 +1,7 @@
 package controllers;
 
 import helper.GithubClient;
+import models.repoDetails.IssueItem;
 import models.searchResult.GithubInfo;
 import models.searchResult.SearchResults;
 import play.mvc.*;
@@ -57,6 +58,14 @@ public class HomeController extends Controller {
         	githubInfo = new GithubInfo(searchKeyword, resp);
         	githubInfos.add(githubInfo);
         	return ok(views.html.index.render(githubInfos));
+        });
+    }
+
+    public CompletionStage<Result> issues(String user, String repo) {
+        CompletionStage<IssueItem[]> response = this.githubClient.fetchIssues(user, repo);
+        return response.thenApply(resp -> {
+            logger.info(resp[0].toString());
+            return ok(views.html.issues.render());
         });
     }
 

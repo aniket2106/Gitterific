@@ -3,6 +3,7 @@ package helper;
 import java.util.concurrent.CompletionStage;
 
 import models.searchResult.SearchResults;
+import models.repoDetails.IssueItem;
 import play.libs.Json;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
@@ -33,6 +34,14 @@ public class GithubClient implements WSBodyReadables, WSBodyWritables  {
 		
 		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, SearchResults.class)).toCompletableFuture();
 
+	}
+
+	public CompletionStage<IssueItem[]> fetchIssues(String userName, String repoName) {
+		WSRequest request = this.wsClient
+			.url(BASE_URL + "repos/" + userName + "/" + repoName + "/issues")
+			.addQueryParameter("per_page", "2");
+
+		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, IssueItem[].class)).toCompletableFuture();
 	}
 
 }

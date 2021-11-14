@@ -21,7 +21,7 @@
 							@for(repo <- searchResult.getSearchResults().getItems()) {
 								<tr>
 									<td><a href="#">@repo.getOwner().getLogin()</a></td>
-									<td><a href="#">@repo.getName()</a></td>
+									<td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())'>@repo.getName()</a></td>
 								</tr>
 							}
 						</table>	  
