@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -62,9 +63,12 @@ public class HomeController extends Controller {
     }
 
     public CompletionStage<Result> issues(String user, String repo) {
+        if (this.githubClient.getWsClient() == null) {
+            this.githubClient.setWsClient(wsClient);
+        }
         CompletionStage<IssueItem[]> response = this.githubClient.fetchIssues(user, repo);
         return response.thenApply(resp -> {
-            logger.info(resp[0].toString());
+            logger.info(Arrays.toString(resp));
             return ok(views.html.issues.render());
         });
     }

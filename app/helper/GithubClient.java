@@ -1,5 +1,6 @@
 package helper;
 
+import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 import models.searchResult.SearchResults;
@@ -10,10 +11,15 @@ import play.libs.ws.WSBodyWritables;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GithubClient implements WSBodyReadables, WSBodyWritables  {
 	
 	private WSClient wsClient;
 	public String BASE_URL="https://api.github.com/";
+
+	private final Logger logger = LoggerFactory.getLogger("play");
 	
 	public GithubClient() {
 		
@@ -37,9 +43,11 @@ public class GithubClient implements WSBodyReadables, WSBodyWritables  {
 	}
 
 	public CompletionStage<IssueItem[]> fetchIssues(String userName, String repoName) {
+		logger.info(userName);
+		logger.info(repoName);
 		WSRequest request = this.wsClient
-			.url(BASE_URL + "repos/" + userName + "/" + repoName + "/issues")
-			.addQueryParameter("per_page", "2");
+		.url(BASE_URL + "repos/" + userName + "/" + repoName + "/issues")
+		.addQueryParameter("per_page", "2");
 
 		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, IssueItem[].class)).toCompletableFuture();
 	}
