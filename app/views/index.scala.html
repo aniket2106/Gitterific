@@ -1,4 +1,5 @@
-@()
+@import models.searchResult.GithubInfo
+@(searchResults: List[GithubInfo])
 
 @main("Gitterific") {
 <center>
@@ -7,5 +8,25 @@
   			<input type="text" name="searchKeyword" placeholder="Please Search Here" />
   			<input type="submit" name="Search" />
   		</form>
+  		<br>
+		  <div>
+			  @if(searchResults != null) {
+					@for(searchResult <- searchResults) {
+						<p>Search result for query: @searchResult.getSearchKeyword()</p>
+						<table>
+							<tr>
+								<th>Author</th>
+								<th>Repo name</th>
+							</tr>
+							@for(repo <- searchResult.getSearchResults().getItems()) {
+								<tr>
+									<td><a href="#">@repo.getOwner().getLogin()</a></td>
+									<td><a href="#">@repo.getName()</a></td>
+								</tr>
+							}
+						</table>	  
+					}
+			  }
+		  </div>
  </center>
 }

@@ -17,6 +17,9 @@ public class Owner {
 
     @JsonProperty("node_id")
     private String nodeId;
+    
+    @JsonProperty("login")
+    private String login;
 
     public Owner() {
     }
@@ -40,6 +43,14 @@ public class Owner {
 
     public String getNodeId() {
         return this.nodeId;
+    }
+    
+    public void setLogin(String login) {
+    	this.login = login;
+    }
+    
+    public String getLogin() {
+    	return this.login;
     }
 
     @Override

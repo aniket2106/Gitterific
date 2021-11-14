@@ -1,6 +1,7 @@
 package controllers;
 
 import helper.GithubClient;
+import models.searchResult.GithubInfo;
 import models.searchResult.SearchResults;
 import play.mvc.*;
 
@@ -10,6 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -25,6 +29,8 @@ public class HomeController extends Controller {
 
     final Logger logger = LoggerFactory.getLogger("play");
     
+    private static List<GithubInfo> githubInfos = new ArrayList(50);
+    
     public HomeController() {
         this.githubClient = new GithubClient();
     }
@@ -36,18 +42,22 @@ public class HomeController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-    public Result index(String searchKeyword) 
+    public CompletionStage<Result> index(String searchKeyword) 
     {
+    	if (searchKeyword == "") {
+    		return CompletableFuture.completedFuture(ok(views.html.index.render(githubInfos)));
+    	}
     	if (this.githubClient.getWsClient() == null) {
             this.githubClient.setWsClient(wsClient);
         }
         logger.info(searchKeyword);
         CompletionStage<SearchResults> response = this.githubClient.fetchRepos(searchKeyword);
-        response.thenApply(resp -> {
-            logger.info(resp.toString());
-            return resp;
+        return response.thenApply(resp -> {
+        	GithubInfo githubInfo;
+        	githubInfo = new GithubInfo(searchKeyword, resp);
+        	githubInfos.add(githubInfo);
+        	return ok(views.html.index.render(githubInfos));
         });
-        return ok(views.html.index.render());
     }
 
 }

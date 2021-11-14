@@ -9,6 +9,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "id",
+        "name",
         "full_name",
         "node_id",
         "owner",
@@ -19,6 +20,9 @@ public class SearchResultItem {
 
     @JsonProperty("id")
     private int id;
+
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty("full_name")
     private String fullName;
@@ -41,6 +45,14 @@ public class SearchResultItem {
 
     public int getId() {
         return this.id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public void setFullName(String fullName) {
