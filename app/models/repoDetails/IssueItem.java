@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "url",
+        "html_url",
         "number",
         "title"
 })
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 public class IssueItem {
     
-    @JsonProperty("url")
+    @JsonProperty("html_url")
     private String url;
 
     @JsonProperty("number")
