@@ -2,6 +2,7 @@ package controllers;
 
 import helper.GithubClient;
 import models.repoDetails.IssueItem;
+import models.repoDetails.RepoDetail;
 import models.searchResult.GithubInfo;
 import models.searchResult.SearchResults;
 import play.mvc.*;
@@ -66,11 +67,12 @@ public class HomeController extends Controller {
         if (this.githubClient.getWsClient() == null) {
             this.githubClient.setWsClient(wsClient);
         }
-        CompletionStage<IssueItem[]> response = this.githubClient.fetchIssues(user, repo);
-        return response.thenApply(resp -> {
-            logger.info(Arrays.toString(resp));
-            return ok(views.html.issues.render());
+        CompletionStage<RepoDetail> repoDetailResponse = this.githubClient.fetchRepoDetail(user, repo);
+        CompletionStage<IssueItem[]> issueResponse = this.githubClient.fetchIssues(user, repo);
+
+        return repoDetailResponse.thenCombine(issueResponse, (repoDetail, issues) -> {
+            repoDetail.setIssueItems(Arrays.asList(issues));
+            return ok(views.html.repodetail.render(repoDetail));
         });
     }
-
 }
