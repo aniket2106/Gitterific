@@ -6,7 +6,7 @@ import models.repoDetails.RepoDetail;
 import models.searchResult.GithubInfo;
 import models.searchResult.SearchResults;
 import play.mvc.*;
-
+import play.api.libs.json.Json;
 import play.libs.ws.WSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -58,7 +59,10 @@ public class HomeController extends Controller {
         return response.thenApply(resp -> {
         	GithubInfo githubInfo;
         	githubInfo = new GithubInfo(searchKeyword, resp);
+            Collections.reverse(githubInfos);
         	githubInfos.add(githubInfo);
+            Collections.reverse(githubInfos);
+        
         	return ok(views.html.index.render(githubInfos));
         });
     }
@@ -73,6 +77,17 @@ public class HomeController extends Controller {
         return repoDetailResponse.thenCombine(issueResponse, (repoDetail, issues) -> {
             repoDetail.setIssueItems(Arrays.asList(issues));
             return ok(views.html.repodetail.render(repoDetail));
+        });
+    }
+
+    public CompletionStage<Result> repoByTopic(String topic) {
+        if (this.githubClient.getWsClient() == null) {
+            this.githubClient.setWsClient(wsClient);
+        }
+        CompletionStage<SearchResults> reposByTopic = this.githubClient.fetchReposByTopic(topic);
+        return reposByTopic.thenApply(repos -> {
+            // logger.info(repos.toString());
+            return ok(views.html.repoByDetail.render(repos, topic));
         });
     }
 }

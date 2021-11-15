@@ -58,4 +58,15 @@ public class GithubClient implements WSBodyReadables, WSBodyWritables  {
 		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, IssueItem[].class)).toCompletableFuture();
 	}
 
+	public CompletionStage<SearchResults> fetchReposByTopic(String topic){
+		WSRequest request = this.wsClient
+		.url(BASE_URL + "search/repositories")
+		.addQueryParameter("sort", "updated")
+		.addQueryParameter("order", "desc")
+		.addQueryParameter("per_page", "10")
+		.addQueryParameter("q", "topic:" + topic);
+		
+		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, SearchResults.class)).toCompletableFuture();
+
+	}
 }

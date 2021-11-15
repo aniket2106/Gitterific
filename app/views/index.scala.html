@@ -17,11 +17,19 @@
 							<tr>
 								<th>Author</th>
 								<th>Repo name</th>
+								<th>Topics</th>
 							</tr>
 							@for(repo <- searchResult.getSearchResults().getItems()) {
 								<tr>
 									<td><a href="#">@repo.getOwner().getLogin()</a></td>
-									<td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())'>@repo.getName()</a></td>
+									<td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())' target="_blank">@repo.getName()</a></td>
+									<td><span>
+										@if(repo.getTopics() != null) {
+											@for(topic <- repo.getTopics()) {
+												<a href="@routes.HomeController.repoByTopic(topic)" target="_blank">@topic</a>
+											}
+										}
+									</span></td>
 								</tr>
 							}
 						</table>	  
