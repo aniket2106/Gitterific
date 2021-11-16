@@ -64,6 +64,9 @@ public class HomeController extends Controller {
         }
         logger.info(searchKeyword);
         
+        
+        
+        
         CompletionStage<SearchResults> response = this.githubClient.fetchRepos(searchKeyword);
         return response.thenApply(resp -> {
         
