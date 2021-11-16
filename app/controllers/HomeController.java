@@ -11,6 +11,7 @@ import play.libs.ws.WSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import javax.inject.Inject;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class HomeController extends Controller {
             this.githubClient.setWsClient(wsClient);
         }
         logger.info(searchKeyword);
+        
         CompletionStage<SearchResults> response = this.githubClient.fetchRepos(searchKeyword);
         return response.thenApply(resp -> {
         	GithubInfo githubInfo;
