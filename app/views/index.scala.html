@@ -1,5 +1,5 @@
-@import models.searchResult.GithubInfo
-@(searchResults: List[GithubInfo])
+@import models.searchResult.SearchResults
+@(searchResults: Map[String, SearchResults])
 
 @main("Gitterific") {
 <center>
@@ -11,15 +11,15 @@
   		<br>
 		  <div>
 			  @if(searchResults != null) {
-					@for(searchResult <- searchResults) {
-						<p>Search result for query: @searchResult.getSearchKeyword()</p>
+					@for((searchKeyword, searchResult) <- searchResults) {
+						<p>Search result for query: @searchKeyword</p>
 						<table>
 							<tr>
 								<th>Author</th>
 								<th>Repo name</th>
 								<th>Topics</th>
 							</tr>
-							@for(repo <- searchResult.getSearchResults().getItems()) {
+							@for(repo <- searchResult.getItems()) {
 								<tr>
 									<td><a href="#">@repo.getOwner().getLogin()</a></td>
 									<td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())' target="_blank">@repo.getName()</a></td>
