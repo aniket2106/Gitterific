@@ -4,7 +4,7 @@ import helper.GithubClient;
 import helper.Session;
 import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
-import models.searchResult.GithubInfo;
+
 import models.searchResult.SearchResults;
 import play.mvc.*;
 import play.api.libs.json.Json;
@@ -33,8 +33,7 @@ public class HomeController extends Controller {
     GithubClient githubClient;
 
     final Logger logger = LoggerFactory.getLogger("play");
-    
-    private static List<GithubInfo> githubInfos = new ArrayList(50);
+   
 
     private static int counter = 1;
     
@@ -65,11 +64,7 @@ public class HomeController extends Controller {
         logger.info(searchKeyword);
         CompletionStage<SearchResults> response = this.githubClient.fetchRepos(searchKeyword);
         return response.thenApply(resp -> {
-        	GithubInfo githubInfo;
-        	// githubInfo = new GithubInfo(searchKeyword, resp);
-            // Collections.reverse(githubInfos);
-        	// githubInfos.add(githubInfo);
-            // Collections.reverse(githubInfos);
+        
             Session.setSessionSearchResultsHashMap(request, searchKeyword, resp);
             if (!Session.isSessionExist(request)) {
                 counter += 1;
