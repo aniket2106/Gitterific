@@ -21,7 +21,7 @@
 							</tr>
 							@for(repo <- searchResult.getItems()) {
 								<tr>
-									<td><a href="#">@repo.getOwner().getLogin()</a></td>
+									<td><a href="@routes.HomeController.getUserProfile(repo.getOwner().getLogin())">@repo.getOwner().getLogin()</a></td>
 									<td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())' target="_blank">@repo.getName()</a></td>
 									<td><span>
 										@if(repo.getTopics() != null) {
