@@ -1,0 +1,61 @@
+@(userdata: List[publicUserProfile], repo: List[publicUserRepo])
+@main("Github's public information"){
+
+<body>
+<div>
+    <table border="1" width="70%"  style=" border-collapse: collapse; text-align:center;  column-width: 100">
+        <thead style="height:50px">
+        <tr>
+            <th>User Name</th>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Email</th>
+            <th>Hireable</th>
+            <th>Bio</th>
+            <th>Twitter_username</th>
+            <th>Public Repos</th>
+            <th>Followers</th>
+            <th>Following</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @for(x<-userdata){
+        <tr>
+            <td>@x.getUserid</td>
+            <td>@x.getName</td>
+            <td>@x.getCompany</td>
+            <td>@x.getLocation</td>
+            <td>@x.getEmail</td>
+            <td>@x.getHire</td>
+            <td>@x.getBio</td>
+            <td>@x.getTwitterUsername</td>
+            <td>@x.getPublic_repos</td>
+            <td>@x.getFollowers</td>
+            <td>@x.getFollowing</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <table border="1" width="70%"  style=" border-collapse: collapse; text-align:center;  column-width: 100">
+        <thead style="height:50px">
+        <tr>
+            <th>Repositories</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @for(x<-repo){
+        <tr>
+            <td>@x.getRepoNames</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+</body>
+}

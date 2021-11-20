@@ -1,0 +1,28 @@
+@import models.searchResult.SearchResults
+@(repos: SearchResults, topic: String)
+
+@main("Repos by topic") {
+    <center>
+        <h3>Latest 10 repos in topic @topic</h3>
+        <table>
+            <tr>
+                <th>Author</th>
+                <th>Repo name</th>
+                <th>Topics</th>
+            </tr>
+            @for(repo <- repos.getItems()) {
+                <tr>
+                    <td><a href="#">@repo.getOwner().getLogin()</a></td>
+                    <td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())' target="_blank">@repo.getName()</a></td>
+                    <td><span>
+                        @if(repo.getTopics() != null) {
+                            @for(topic <- repo.getTopics()) {
+                                <a href="@routes.HomeController.repoByTopic(topic)" target="_blank">@topic</a>
+                            }
+                        }
+                    </span></td>
+                </tr>
+            }
+        </table>
+    </center>
+}
