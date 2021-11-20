@@ -9,6 +9,8 @@ scalaVersion := "2.13.6"
 
 libraryDependencies += guice
 
+libraryDependencies += ehcache
+
 
 
 libraryDependencies ++= Seq(
