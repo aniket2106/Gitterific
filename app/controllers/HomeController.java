@@ -101,16 +101,12 @@ public class HomeController extends Controller {
         });
     }
 
-    public Result getUserProfile(String username){
-//        return CompletableFuture
-//                .supplyAsync(() -> )
-//                .thenApply(i -> {
-//                      = i;
-//                    String userName = userdata.get(0).getUserid();
-//                });
-        List<publicUserProfile> userdata = profile.getData(username);
-        List<publicUserRepo> repo = userRepo.getData(username);
-        return ok(views.html.publicInformation.render(userdata,repo));
-
+    public CompletionStage<Result> getUserProfile(String username){
+        return CompletableFuture
+                .supplyAsync(() -> profile.getData(username))
+                .thenCombine(
+                        CompletableFuture.supplyAsync(() -> userRepo.getData(username)),
+                        (userdata,repo) -> ok(views.html.publicInformation.render(userdata,repo))
+                );
     }
 }
