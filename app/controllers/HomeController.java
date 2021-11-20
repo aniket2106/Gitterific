@@ -1,9 +1,10 @@
 package controllers;
 
 import helper.GithubClient;
+import helper.Session;
 import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
-import models.searchResult.GithubInfo;
+
 import models.searchResult.SearchResults;
 import play.mvc.*;
 import play.api.libs.json.Json;
@@ -32,8 +33,9 @@ public class HomeController extends Controller {
     GithubClient githubClient;
 
     final Logger logger = LoggerFactory.getLogger("play");
-    
-    private static List<GithubInfo> githubInfos = new ArrayList(50);
+   
+
+    private static int counter = 1;
     
     public HomeController() {
         this.githubClient = new GithubClient();
@@ -46,10 +48,15 @@ public class HomeController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-    public CompletionStage<Result> index(String searchKeyword) 
+    public CompletionStage<Result> index(Http.Request request, String searchKeyword) 
     {
     	if (searchKeyword == "") {
-    		return CompletableFuture.completedFuture(ok(views.html.index.render(githubInfos)));
+            if (!Session.isSessionExist(request)) {
+                counter += 1;
+                return CompletableFuture.completedFuture(ok(views.html.index.render(Session.getSearchResultsHashMapFromSession(request))).addingToSession(request, Session.getSessionKey(), Integer.toString(counter)));
+            } else {
+                return CompletableFuture.completedFuture(ok(views.html.index.render(Session.getSearchResultsHashMapFromSession(request))));
+            }
     	}
     	if (this.githubClient.getWsClient() == null) {
             this.githubClient.setWsClient(wsClient);
@@ -57,13 +64,14 @@ public class HomeController extends Controller {
         logger.info(searchKeyword);
         CompletionStage<SearchResults> response = this.githubClient.fetchRepos(searchKeyword);
         return response.thenApply(resp -> {
-        	GithubInfo githubInfo;
-        	githubInfo = new GithubInfo(searchKeyword, resp);
-            Collections.reverse(githubInfos);
-        	githubInfos.add(githubInfo);
-            Collections.reverse(githubInfos);
         
-        	return ok(views.html.index.render(githubInfos));
+            Session.setSessionSearchResultsHashMap(request, searchKeyword, resp);
+            if (!Session.isSessionExist(request)) {
+                counter += 1;
+                return ok(views.html.index.render(Session.getSearchResultsHashMapFromSession(request))).addingToSession(request, Session.getSessionKey(), Integer.toString(counter));
+            } else {
+                return ok(views.html.index.render(Session.getSearchResultsHashMapFromSession(request)));
+            }
         });
     }
 
