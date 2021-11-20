@@ -5,15 +5,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+
+import org.mockito.thenReturn;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import helper.GithubClient;
 import helper.Session;
-import models.Helper.SessionHelper;
-import models.Helper.YoutubeAnalyzer;
-import models.POJO.SearchResults.Id;
-import models.POJO.SearchResults.SearchResultItem;
-import models.POJO.SearchResults.Snippet;
-import models.searchResult.SearchResults;
+
+import models.searchResult.*;
 
 import play.Application;
 import play.api.i18n.MessagesApi;
@@ -58,8 +59,6 @@ public class HomeControllerTest extends WithApplication {
     }
 
     HomeController homeController;
-    //FormFactory _mockFormFactory;
-    //MessagesApi messagesApi;
     GithubClient githubClientMock;;
     SearchResults searchResults;
     
@@ -67,21 +66,20 @@ public class HomeControllerTest extends WithApplication {
     public void init() {
         MockitoAnnotations.openMocks(this);
         homeController = new HomeController();
-        //_mockFormFactory = new GuiceApplicationBuilder().injector().instanceOf(FormFactory.class);
-        //messagesApi = new GuiceApplicationBuilder().injector().instanceOf(MessagesApi.class);
         githubClientMock = mock(GithubClient.class);
         homeController.setHomeController(githubClientMock);
-        //homeController.setFormFactory(_mockFormFactory);
-        //homeController.setMessagesApi(messagesApi);
         searchResults = new SearchResults();
         
         
-        when(githubClientMock.index(anyString())).thenReturn(CompletableFuture.supplyAsync(ArgumentMatchers::anyString));
-        when(githubClientMock.issues(anyString())).thenReturn(CompletableFuture.supplyAsync(ArgumentMatchers::anyString));
-        when(githubClientMock.repoByTopic(any(LinkedHashMap.class), anyString())).thenReturn(new HashMap<String, Long>());
+        when(githubClientMock.fetchRepos(anyString())).thenReturn(CompletableFuture.supplyAsync(ArgumentMatchers::anyString));
+        //when(githubClientMock.fetchRepoDetail(anyString())).thenReturn(CompletableFuture.supplyAsync(ArgumentMatchers::anyString));
+
+        //        when(githubClientMock.fetchIssues(anyString())).thenReturn(CompletableFuture.supplyAsync(ArgumentMatchers::anyString));
+//        when(githubClientMock.fetchReposByTopic(any(LinkedHashMap.class), anyString())).thenReturn(new HashMap<String, Long>());
         
         
     }
+    
     @Test
     public void indexTestWithSession() {
         Http.RequestBuilder requestBuilder = Helpers.fakeRequest(routes.HomeController.index());
@@ -91,51 +89,40 @@ public class HomeControllerTest extends WithApplication {
         Assert.assertEquals(OK, result.status());
     }
     
-    
-    /**
-     * This method tests the <code>POST</code> request with a path of <code>/</code>, to Index page of the application
-     * with valid Session and expects {@link Result} 200.
-     *
-     * @throws ExecutionException   Exception might occur on calling get() on {@link CompletableFuture}.
-     * @throws InterruptedException Exception might occur on calling get() on {@link CompletableFuture}.
-     * @author Rajan Shah
-     */
     @Test
     public void fetchReposByKeywordsTest() throws ExecutionException, InterruptedException {
+    	
         SearchResults searchResults1 = new SearchResults();
-        SearchResultItem searchResultItem = new SearchResultItem();
-        searchResultItem.setId(new Id("abcXyz"));
-        searchResultItem.setViewCount("123");
-        searchResultItem.setSnippet(new Snippet("123", "channelTitle", "title", "description", "publishedAt", "publishTime"));
+        SearchResultItem searchResultItem = new SearchResultItem();        
+        searchResultItem.setId(new id("123"));
+        searchResultItem.setName("zara");
+        searchResultItem.setFullName("hsj");
+        searchResultItem.setNodeId("44");
+        searchResultItem.setOwner("44");
+
+        searchResultItem.setTopics(Arrays.asList("ai", "python", "machine-learning"));
+   
         searchResults1.setItems(new ArrayList<SearchResultItem>() {{
             add(searchResultItem);
         }});
-        when(youtubeAnalyzerMock.fetchVideos("hello world")).thenReturn(CompletableFuture.supplyAsync(() -> searchResults1));
-        Http.RequestBuilder requestBuilder = Helpers.fakeRequest(routes.YoutubeAnalyzerController.fetchVideosByKeywords());
-        requestBuilder.header("User-Agent", "chrome");
-        requestBuilder.session(SessionHelper.getSessionKey(), requestBuilder.getHeaders().get("User-Agent").get());
+        
+        when(githubClientMock.fetchRepos("machine learning")).thenReturn(CompletableFuture.supplyAsync(() -> searchResults1));
+        Http.RequestBuilder requestBuilder = Helpers.fakeRequest(routes.HomeController.index());
+        requestBuilder.header("sessionId", "1");
+        requestBuilder.session(Session.getSessionKey(), requestBuilder.getHeaders().get("sessionId").get());
         Map<String, String[]> requestBody = new HashMap<>();
-        String[] searchKeyWord = new String[]{"hello world"};
+        String[] searchKeyWord = new String[]{"machine learning"};
         requestBody.put("searchKeyword", searchKeyWord);
         requestBuilder.bodyFormArrayValues(requestBody);
-        CompletionStage<Result> resultCompletionStage = youtubeAnalyzerController.fetchVideosByKeywords(requestBuilder.build());
+        CompletionStage<Result> resultCompletionStage = homeController.index(requestBuilder.build());
         Assert.assertEquals(OK, resultCompletionStage.toCompletableFuture().get().status());
     }
-
+   
     
-    
-    
-    
-    
-    
-    
-    
-    @After
+	@After
     public void destroy() {
     	homeController = null;
     	githubClientMock = null;
-        //messagesApi = null;
-        //mockFormFactory = null;
         searchResults = null;
     }
     
