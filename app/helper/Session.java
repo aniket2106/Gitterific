@@ -1,7 +1,6 @@
 
 package helper;
 
-
 import models.searchResult.SearchResults;
 import play.mvc.Http;
 
