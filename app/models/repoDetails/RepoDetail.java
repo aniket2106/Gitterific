@@ -69,6 +69,23 @@ public class RepoDetail {
     public RepoDetail() {
 
     }
+    
+    public RepoDetail(int id, String nodeId, String fullName, Boolean isPrivate, Owner owner,  String htmlUrl, String description, String createdAt, int watchersCount, int forksCount, List<String> topics, String visibility)
+    {
+    	this.id = id;
+    	this.nodeId = nodeId;
+    	this.fullName = fullName;
+    	this.isPrivate = isPrivate;
+    	this.owner = owner;
+    	this.htmlUrl = htmlUrl;
+    	this.description = description;
+    	this.createdAt = createdAt;
+    	this.watchersCount = watchersCount;
+    	this.forksCount = forksCount;
+    	this.topics = topics;
+    	this.visibility = visibility;
+    	
+    }
 
     public int getId() {
         return id;
