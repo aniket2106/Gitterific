@@ -32,12 +32,15 @@ public class HomeController extends Controller {
     WSClient wsClient;
 
     GithubClient githubClient;
-
+    
     final Logger logger = LoggerFactory.getLogger("play");
    
 
     private static int counter = 1;
-    
+
+    /**
+     * Controller Constructor
+     */
     public HomeController() {
         this.githubClient = new GithubClient();
     }

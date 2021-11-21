@@ -12,6 +12,10 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
 
+/**
+ * HomeControllerTest Test Class
+ * This class tests only the Result Status and not the response body.
+ */
 public class HomeControllerTest extends WithApplication {
 
     @Override
@@ -19,6 +23,10 @@ public class HomeControllerTest extends WithApplication {
         return new GuiceApplicationBuilder().build();
     }
 
+    
+    /**
+     * This method checks the <code>GET</code> request with a path of <code>/</code>, to Index page of the application
+     */
     @Test
     public void testIndex() {
         Http.RequestBuilder request = new Http.RequestBuilder()
@@ -29,6 +37,10 @@ public class HomeControllerTest extends WithApplication {
         assertEquals(OK, result.status());
     }
 
+    /**
+     * This method tests the <code>GET</code> request with a path of <code>/searchKeyword</code>, to Index page of the application
+     * with dummySearch keyword.
+     */
     @Test
     public void testSearchResult() {
         Http.RequestBuilder request = new Http.RequestBuilder()
@@ -50,6 +62,10 @@ public class HomeControllerTest extends WithApplication {
     }
     */
     
+    /**
+     * This method tests the <code>GET</code> request with a path of <code>/search/topic</code>, to topic page of the application
+     * and expects {@link Result} 10.
+     */
     @Test
     public void testRepoByTopic() {
         Http.RequestBuilder request = new Http.RequestBuilder()
@@ -59,6 +75,11 @@ public class HomeControllerTest extends WithApplication {
         Result result = route(app, request);
         assertEquals(OK, result.status());
     }
+    
+    /**
+     This method tests the <code>GET</code> request with a path of <code>/repo/issues</code>, to index page of the application
+     * and expects {@link Result} 20.
+     */
    
     @Test
     public void testIssues() {
