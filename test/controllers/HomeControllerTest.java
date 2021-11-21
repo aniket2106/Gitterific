@@ -50,7 +50,10 @@ public class HomeControllerTest extends WithApplication {
         Result result = route(app, request);
         assertEquals(OK, result.status());
     }
-    /*
+
+    /**
+     * This method tests the <code>GET</code> request with a path of <code>/key</code>.
+     */
     @Test
     public void testUserProfile() {
         Http.RequestBuilder request = new Http.RequestBuilder()
@@ -60,7 +63,7 @@ public class HomeControllerTest extends WithApplication {
         Result result = route(app, request);
         assertEquals(OK, result.status());
     }
-    */
+
     
     /**
      * This method tests the <code>GET</code> request with a path of <code>/search/topic</code>, to topic page of the application
