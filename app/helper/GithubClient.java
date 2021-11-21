@@ -1,11 +1,25 @@
 package helper;
 
+import static java.util.function.UnaryOperator.identity;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.counting;
+import static java.util.Collections.reverseOrder;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.concurrent.CompletionStage;
 
-import models.searchResult.SearchResults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
+import models.searchResult.SearchResults;
 import play.libs.Json;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
@@ -114,4 +128,25 @@ public class GithubClient implements WSBodyReadables, WSBodyWritables  {
 		return request.get().thenApply(wsResponse -> Json.parse(wsResponse.getBody())).thenApply(wsResponse -> Json.fromJson(wsResponse, SearchResults.class)).toCompletableFuture();
 
 	}
+	
+	/*
+	 * public Map<String, Long> getSimilarityStats(LinkedHashMap<String,
+	 * SearchResults> searchResultsLinkedHashMap, String keyword) { SearchResults
+	 * searchResults = searchResultsLinkedHashMap.get(keyword); if (searchResults ==
+	 * null || (searchResults.getItems() == null || searchResults.getItems().size()
+	 * == 0)) { return new HashMap<String, Long>() {{ put(keyword, (long) 0); }}; }
+	 * List<String> tokens = searchResults .getItems() .stream()
+	 * .map(searchResultItem -> searchResultItem.getSnippet().getTitle())
+	 * .flatMap(title -> Arrays.stream(title.split("\\s+").clone())) // split into
+	 * words .map(s -> s.replaceAll("[^a-zA-Z0-9]", "")) // discarding special
+	 * characters .filter(s -> !s.matches("[0-9]+")) // discarding only number
+	 * strings .filter(s -> !s.isEmpty() && s.length() > 1) // accept only non empty
+	 * string with length more than 1 .collect(toList());
+	 * 
+	 * return tokens.stream() .map(String::toLowerCase)
+	 * .collect(Collectors.groupingBy(identity(), counting())) // creates map of
+	 * (unique words, count) .entrySet().stream() .sorted(Map.Entry.<String,
+	 * Long>comparingByValue(reverseOrder())) .collect(toMap(Map.Entry::getKey,
+	 * Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new)); }
+	 */
 }

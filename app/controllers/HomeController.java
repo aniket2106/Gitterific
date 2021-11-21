@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.Map;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -137,4 +138,20 @@ public class HomeController extends Controller {
                         (userdata,repo) -> ok(views.html.publicInformation.render(userdata,repo))
                 );
     }
+    
+    public Result stats() { 
+		 return ok(views.html.statistics.render()); 
+	}
+	
+
+	/*
+	 * public Result getStats(Http.Request request, String keyword) { if
+	 * (!Session.isSessionExist(request)) { return unauthorized("No Session Exist");
+	 * } if (Session.getSearchResultsHashMapFromSession(request) == null ||
+	 * Session.getSearchResultsHashMapFromSession(request).get(keyword) == null) {
+	 * return notFound(views.html.statistics.render(null)); } Map<String, Long>
+	 * similarityStatsMap = this.githubClient
+	 * .getSimilarityStats(Session.getSearchResultsHashMapFromSession(request),
+	 * keyword); return ok(views.html.statistics.render(similarityStatsMap)); }
+	 */
 }

@@ -13,7 +13,8 @@ import java.util.List;
         "full_name",
         "node_id",
         "owner",
-        "topics"
+        "topics",
+        "snippet"
 })
 
 public class SearchResultItem {
@@ -35,6 +36,9 @@ public class SearchResultItem {
 
     @JsonProperty("topics")
     private List<String> topics = null;
+    
+    @JsonProperty("snippet")
+    private Snippet snippet;
 
     public SearchResultItem() {
     }
@@ -86,11 +90,24 @@ public class SearchResultItem {
     public List<String> getTopics() {
         return this.topics;
     }
+    public Snippet getSnippet() {
+        return snippet;
+    }
+
+    /**
+     * Sets snippet.
+     *
+     * @param snippet the snippet
+     */
+    public void setSnippet(Snippet snippet) {
+        this.snippet = snippet;
+    }
 
     @Override
     public String toString() {
         return "SearchResultItem{" +
                 "id=" + Integer.toString(id) +
+                ",Snippet=" + snippet +
                 ", full_name=" + fullName +
                 ", node_id=" + nodeId +
                 ", owner=" + owner + "}";
