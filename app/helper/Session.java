@@ -14,6 +14,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class manages session for the Application.
+ */
+
 public class Session {
     private static final HashMap<String, LinkedHashMap<String, SearchResults>> sessionSearchResultsBySearchKeywordHashMap = new HashMap<>();
     private static final String SESSION_KEY = "sessionId";
@@ -22,6 +26,13 @@ public class Session {
     public static String getSessionKey() {
         return SESSION_KEY;
     }
+    
+    /**
+     * This method returns the SearchResults stored for the current session
+     *
+     * @param request Http Request
+     * @return {@link LinkedHashMap} of SearchKeyword and {@link SearchResults}
+     */
 
     public static LinkedHashMap<String, SearchResults> getSearchResultsHashMapFromSession(Http.Request request) {
         String key = getSessionValue(request);
@@ -29,7 +40,13 @@ public class Session {
         return sessionSearchResultsBySearchKeywordHashMap.get(key);
     }
 
- 
+    /**
+     * This method stores the SearchResults for the current session
+     *
+     * @param request       Http Request
+     * @param searchKeyword keyword for which SearchResults are fetched.
+     * @param searchResults Response from {@link GithubClient} {@see fetchRepos}
+     */
     public static void setSessionSearchResultsHashMap(Http.Request request, String searchKeyword, SearchResults searchResults) {
         String key = getSessionValue(request);
         LinkedHashMap<String, SearchResults> searchResultsLinkedHashMap = getSearchResultsHashMapFromSession(request);
@@ -41,14 +58,28 @@ public class Session {
         sessionSearchResultsBySearchKeywordHashMap.put(key, searchResultsLinkedHashMap);
         reverseHash(request);
     }
-
+    
+    /**
+     * @param request Http Request
+     * @return Boolean whether session exists or not.
+     */
     public static boolean isSessionExist(Http.Request request) {
         return request.session().get(SESSION_KEY).orElse(null) != null;
     }
+    
+    /**
+     * @param request Http Request
+     * @return String Session value or null.
+     */
 
     public static String getSessionValue(Http.Request request) {
         return request.session().get(SESSION_KEY).orElse(null);
     }
+    
+    /**
+     * method to reverse Linkedhashmap
+     * @param request Http Request 
+     */
 
     public static void reverseHash(Http.Request request) {
         String sessionKey = request.session().get(SESSION_KEY).orElse(null);

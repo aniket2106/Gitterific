@@ -42,7 +42,11 @@ public class HomeController extends Controller {
    
 
     private static int counter = 1;
-    
+
+
+    /**
+     * Controller Constructor
+     */
     public HomeController() {
         this.githubClient = new GithubClient();
     }
