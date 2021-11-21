@@ -25,7 +25,6 @@ import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
-<<<<<<< HEAD
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
