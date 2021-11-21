@@ -10,7 +10,7 @@ GET     /repo/:user/:repo           controllers.HomeController.issues(user: Stri
 GET     /search/topic/:topic        controllers.HomeController.repoByTopic(topic: String)
 
 GET     /:key                       controllers.HomeController.getUserProfile(key: String)
-GET     /statistics					controllers.HomeController.stats
+GET     /repo/statistics					controllers.HomeController.stats
 
 
 # Map static resources from the /public folder to the /assets URL path
