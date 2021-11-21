@@ -25,6 +25,10 @@ import java.util.concurrent.CompletionStage;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
+ * <p>
+ *
+ * </p>
+ * @author Group Task
  */
 public class HomeController extends Controller {
 	
@@ -49,6 +53,7 @@ public class HomeController extends Controller {
      * The configuration in the <code>routes</code> file means that
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
+     * @author Group Task
      */
     public CompletionStage<Result> index(Http.Request request, String searchKeyword) 
     {
@@ -77,6 +82,13 @@ public class HomeController extends Controller {
         });
     }
 
+    /**
+     * <p>With this function all the issues of the hyperlinked reppository can be fetched.</p>
+     * @param user It represents the github name of the user.
+     * @param repo It represents the name of the repository.
+     * @return It returns list of issues.
+     * @author Dhruvi Modi
+     */
     public CompletionStage<Result> issues(String user, String repo) {
         if (this.githubClient.getWsClient() == null) {
             this.githubClient.setWsClient(wsClient);
@@ -90,6 +102,12 @@ public class HomeController extends Controller {
         });
     }
 
+    /**
+     * <p> With this function all the topics of the repository can be fetched</p>
+     * @param topic It stores the topic.
+     * @return Returns top 10 topics of the repository
+     * @author Keta Thakkar
+     */
     public CompletionStage<Result> repoByTopic(String topic) {
         if (this.githubClient.getWsClient() == null) {
             this.githubClient.setWsClient(wsClient);
@@ -101,6 +119,12 @@ public class HomeController extends Controller {
         });
     }
 
+    /**
+     *<p>This controller is designed to search user's public github information and repositories</p>
+     * @param username it is used to make an api call to get the user's public github information and repositories
+     * @return html file with user's public github information and repositories
+     * @author Aniket Tailor
+     */
     public CompletionStage<Result> getUserProfile(String username){
         return CompletableFuture
                 .supplyAsync(() -> profile.getData(username))

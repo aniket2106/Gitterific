@@ -14,12 +14,20 @@ import models.publicUserRepo;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * <p>This class is used for getting the public repositories of a user</p>
+ */
 public class userRepo{
 
     String API = "https://api.github.com/users/";
     HttpResponse response = null;
     List<String> l = new ArrayList<>();
 
+    /**
+     * <p>Trying to get the public repositories using github's API</p>
+     * @param username It is the Github's username of the user.
+     * @return JSON object of the public repositories of the user.
+     */
     public Object getUserData(String username){
         Object temp = new Object();
         try{
@@ -33,6 +41,11 @@ public class userRepo{
         return temp;
     }
 
+    /**
+     * <p>This function calls API and process the JSON data.</p>
+     * @param username It is the Github's username of the user.
+     * @return the list of <class>publicUserRepo</class>.
+     */
     public List<publicUserRepo> getData(String username){
         List<publicUserRepo> array = new ArrayList<>();
         JSONArray array1 = (JSONArray) this.getUserData(username);
