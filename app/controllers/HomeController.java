@@ -120,7 +120,7 @@ public class HomeController extends Controller {
         CompletionStage<SearchResults> reposByTopic = this.githubClient.fetchReposByTopic(topic);
         return reposByTopic.thenApply(repos -> {
             // logger.info(repos.toString());
-            return ok(views.html.repoByDetail.render(repos, topic));
+            return ok(views.html.repoByTopic.render(repos, topic));
         });
     }
 
