@@ -1,12 +1,8 @@
-package models;
+package models.searchResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import models.searchResult.Owner;
-import models.searchResult.SearchResultItem;
-import models.searchResult.SearchResults;
 
 public class helper {
     

@@ -118,7 +118,6 @@ public class SearchResultItem {
                 "id=" + Integer.toString(id) +
                 ",Snippet=" + snippet +
                 ", full_name=" + fullName +
-                ", node_id=" + nodeId +
-                ", owner=" + owner + "}";
+                ", node_id=" + nodeId + "}";
     }
 }

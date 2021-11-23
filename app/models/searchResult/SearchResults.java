@@ -27,11 +27,4 @@ public class SearchResults {
         this.items = items;
     }
 
-    @Override
-    public String toString() {
-        return "SearchResults{" +
-                "items=" + items +
-                "}";
-    }
-
 }

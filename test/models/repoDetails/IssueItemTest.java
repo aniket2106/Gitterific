@@ -1,14 +1,8 @@
-package models;
+package models.repoDetails;
 
 import org.junit.Test;
 
-import models.repoDetails.IssueItem;
-import play.mvc.Http;
-import play.mvc.Result;
 import static org.junit.Assert.assertEquals;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.GET;
-import static play.test.Helpers.route;
 
 
 public class IssueItemTest 

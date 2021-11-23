@@ -1,9 +1,7 @@
-package models;
+package models.searchResult;
 
 import org.junit.Test;
 
-import models.searchResult.SearchResultItem;
-import models.searchResult.SearchResults;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
