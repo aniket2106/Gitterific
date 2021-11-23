@@ -43,6 +43,15 @@ public class SearchResultItem {
     public SearchResultItem() {
     }
 
+    public SearchResultItem(int id, String name, String fullName, String nodeId, Owner owner, List<String> topics) {
+        this.id = id;
+        this.name = name;
+        this.fullName = fullName;
+        this.nodeId = nodeId;
+        this.owner = owner;
+        this.topics = topics;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

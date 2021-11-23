@@ -24,9 +24,10 @@ public class Owner {
     public Owner() {
     }
 
-    public Owner(int id, String nodeId) {
+    public Owner(int id, String nodeId, String login) {
         this.id = id;
         this.nodeId = nodeId;
+        this.login = login;
     }
 
     public void setId(int id) {
