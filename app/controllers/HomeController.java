@@ -1,6 +1,7 @@
 package controllers;
 
 import helper.GithubClient;
+import java.util.stream.*;
 import helper.Session;
 import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -100,7 +102,7 @@ public class HomeController extends Controller {
         }
         CompletionStage<RepoDetail> repoDetailResponse = this.githubClient.fetchRepoDetail(user, repo);
         CompletionStage<IssueItem[]> issueResponse = this.githubClient.fetchIssues(user, repo);
-
+        
         return repoDetailResponse.thenCombine(issueResponse, (repoDetail, issues) -> {
             repoDetail.setIssueItems(Arrays.asList(issues));
             return ok(views.html.repodetail.render(repoDetail));
@@ -139,19 +141,57 @@ public class HomeController extends Controller {
                 );
     }
     
-    public Result stats() { 
-		 return ok(views.html.statistics.render()); 
+    public CompletionStage<Result> stats(String user, String repo) { 
+    	if (this.githubClient.getWsClient() == null) {
+            this.githubClient.setWsClient(wsClient);
+        }
+    	
+    	String repoSplit[] = repo.split("/");    	
+    	String userName = repoSplit[0];
+    	String repoName = repoSplit[1];
+
+        CompletionStage<RepoDetail> repoDetailResponse = this.githubClient.fetchRepoDetail(userName, repoName);
+        CompletionStage<IssueItem[]> issueResponse = this.githubClient.fetchIssues(userName, repoName);
+        
+        return repoDetailResponse.thenCombine(issueResponse, (repoDetail, issues) -> {
+        	
+        	// TODo check if issues is not empty
+        	
+        	Stream<IssueItem> issueStream = Stream.of(issues);
+           
+            Map<String, Integer> map = issueStream
+                    .map(issue -> issue.getTitle().split("\\s+"))
+                    .flatMap(Arrays::stream)
+                    .filter(word -> word.length() > 1)
+                    .collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
+            map = map.entrySet()
+                    .stream()
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + ":" + entry.getValue());
+            }
+            
+          
+           // repoDetail.setIssueItems(Arrays.asList(issues));
+   		 	return ok(views.html.statistics.render()); 
+        });
 	}
 	
 
 	/*
-	 * public Result getStats(Http.Request request, String keyword) { if
-	 * (!Session.isSessionExist(request)) { return unauthorized("No Session Exist");
-	 * } if (Session.getSearchResultsHashMapFromSession(request) == null ||
-	 * Session.getSearchResultsHashMapFromSession(request).get(keyword) == null) {
-	 * return notFound(views.html.statistics.render(null)); } Map<String, Long>
-	 * similarityStatsMap = this.githubClient
-	 * .getSimilarityStats(Session.getSearchResultsHashMapFromSession(request),
+	 * public Result getStats(Http.Request request, String keyword) { 
+	 * if (!Session.isSessionExist(request)) {
+	 *  return unauthorized("No Session Exist");
+	 * } 
+	 * if (Session.getSearchResultsHashMapFromSession(request) == null ||
+	 * Session.getSearchResultsHashMapFromSession(request).get(keyword) == null) 
+	 * {
+	 * return notFound(views.html.statistics.render(null)); 
+	 * } 
+	 * Map<String, Long>
+	 * similarityStatsMap = this.githubClient.getSimilarityStats(Session.getSearchResultsHashMapFromSession(request),
 	 * keyword); return ok(views.html.statistics.render(similarityStatsMap)); }
 	 */
 }
