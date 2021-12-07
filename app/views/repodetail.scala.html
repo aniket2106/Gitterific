@@ -65,15 +65,12 @@
                     @for(issue <- repoDetail.getIssueItems()) {
                         <tr>
                             <td>@issue.getNumber()</td>
-                            <td>@issue.getTitle()</td>
+                            <td><a href="@routes.HomeController.stats(repoDetail.getOwner().getLogin(), repoDetail.getFullName())" target_="_blank">@issue.getTitle()</a></td>
                             <td><a href="@issue.getUrl()" target="_blank">@issue.getUrl()</a></td>
                         </tr>
                     }
                 </table>
-                <p><a href="@routes.HomeController.stats(repoDetail.getOwner().getLogin(), repoDetail.getFullName())" target_="_blank">
-                	Get word level statistics of the issue titles
-                	</a>
-                </p>
+
             </div>
         }       
     </center>
