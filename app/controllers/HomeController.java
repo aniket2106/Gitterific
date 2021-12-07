@@ -14,6 +14,7 @@ import models.searchResult.SearchResults;
 import play.mvc.*;
 import repoByTopicActors.TopicActorMessages.TopicRepoItems;
 import repoByTopicActors.TopicActorMessages.TopicRequestActorCreate;
+import repoDetailActor.RepoDetailMessages;
 import repoByTopicActors.RequestActor;
 import service.GithubApi;
 import play.api.libs.json.Json;
@@ -58,12 +59,18 @@ public class HomeController extends Controller {
 
 	private final ActorRef requestActor;
 
+	private final ActorRef repoDetailActor;
+
+	private final ActorRef repoIssueActor;
+
 	/**
 	 * Controller Constructor
 	 */
 	@Inject
-	public HomeController(@Named("requestActor") ActorRef requestActor) {
+	public HomeController(@Named("requestActor") ActorRef requestActor, @Named("repoDetailActor") ActorRef repoDetailActor, @Named("repoIssueActor") ActorRef repoIssueActor) {
 		this.requestActor = requestActor;
+		this.repoDetailActor = repoDetailActor;
+		this.repoIssueActor = repoIssueActor;
 		this.githubClient = new GithubClient();
 	}
 
@@ -83,15 +90,28 @@ public class HomeController extends Controller {
 	 * @author Dhruvi Modi
 	 */
 	public CompletionStage<Result> issues(String user, String repo) {
-		if (this.githubClient.getWsClient() == null) {
-			this.githubClient.setWsClient(wsClient);
-		}
-		CompletionStage<RepoDetail> repoDetailResponse = this.githubClient.fetchRepoDetail(user, repo);
-		CompletionStage<IssueItem[]> issueResponse = this.githubClient.fetchIssues(user, repo);
 
-		return repoDetailResponse.thenCombine(issueResponse, (repoDetail, issues) -> {
-			repoDetail.setIssueItems(Arrays.asList(issues));
-			return ok(views.html.repodetail.render(repoDetail));
+		RepoDetailMessages.CreateActorRepoDetail configRepoDetail =  new RepoDetailMessages.CreateActorRepoDetail(user, repo);
+
+		CompletionStage<RepoDetail> repoDetails = FutureConverters.toJava(ask(repoDetailActor, configRepoDetail, 10000)).thenApply((Object response) -> {
+			final RepoDetailMessages.RepoDetailResponse responseMessage = (RepoDetailMessages.RepoDetailResponse) response;
+			return responseMessage.repoDetail;
+		});
+
+		// return repoDetails.thenApply(a -> {
+		// 	return ok(views.html.repodetail.render(a));
+		// });
+
+		RepoDetailMessages.CreateActorRepoIssues configIssues =  new RepoDetailMessages.CreateActorRepoIssues(user, repo);
+
+		CompletionStage<IssueItem[]> issueItems = FutureConverters.toJava(ask(repoIssueActor, configIssues, 10000)).thenApply((Object response) -> {
+			final RepoDetailMessages.RepoIssuesResponse responseMessage = (RepoDetailMessages.RepoIssuesResponse) response;
+			return responseMessage.issueItems;
+		});
+
+		return repoDetails.thenCombineAsync(issueItems, (detail, issues) -> {
+			detail.setIssueItems(Arrays.asList(issues));
+			return ok(views.html.repodetail.render(detail));
 		});
 	}
 
