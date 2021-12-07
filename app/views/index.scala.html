@@ -1,40 +1,15 @@
-@import models.searchResult.SearchResults
-@(searchResults: Map[String, SearchResults])
+@(request: play.mvc.Http.Request)
 
-@main("Gitterific") {
+@sandbox("Gitterific", request) {
 <center>
   	<h1>Welcome to Gitterific!</h1>
-  		<form action="/" method="get">
-  			<input type="text" name="searchKeyword" placeholder="Please Search Here" />
+  		<form id="searchForm" action="/" method="get">
+  			<input type="text" name="searchKeyword" id="query" placeholder="Please Search Here" />
   			<input type="submit" name="Search" />
   		</form>
   		<br>
-		  <div>
-			  @if(searchResults != null) {
-					@for((searchKeyword, searchResult) <- searchResults) {
-						<p>Search result for query: @searchKeyword</p>
-						<table>
-							<tr>
-								<th>Author</th>
-								<th>Repo name</th>
-								<th>Topics</th>
-							</tr>
-							@for(repo <- searchResult.getItems()) {
-								<tr>
-									<td><a href="@routes.HomeController.getUserProfile(repo.getOwner().getLogin())">@repo.getOwner().getLogin()</a></td>
-									<td><a href='@routes.HomeController.issues(repo.getOwner().getLogin(), repo.getName())' target="_blank">@repo.getName()</a></td>
-									<td><span>
-										@if(repo.getTopics() != null) {
-											@for(topic <- repo.getTopics()) {
-												<a href="@routes.HomeController.repoByTopic(topic)" target="_blank">@topic</a>
-											}
-										}
-									</span></td>
-								</tr>
-							}
-						</table>	  
-					}
-			  }
+		  <div id="repos">
+			  
 		  </div>
  </center>
 }
