@@ -104,7 +104,7 @@ public class HomeController extends Controller {
 	 * @return Returns top 10 topics of the repository
 	 * @author Keta Thakkar
 	 */
-	public CompletionStage<Result> repoByTopic(Http.Request request, String topic) {
+	public CompletionStage<Result> repoByTopic(String topic) {
 
 		TopicRequestActorCreate config = new TopicRequestActorCreate(topic);
 
