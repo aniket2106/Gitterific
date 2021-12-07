@@ -21,6 +21,10 @@
                 <td>@repoDetail.getIsPrivate()</td>
             </tr>
             <tr>
+                <th>Owner</th>
+                <td><a href="@routes.HomeController.getUserProfile(repoDetail.getOwner().getLogin())">@repoDetail.getOwner().getLogin()</a></td>
+            </tr>
+            <tr>
                 <th>Github Link</th>
                 <td><a href="@repoDetail.getHtmlUrl()" target="_blank">@repoDetail.getFullName()</a></td>
             </tr>
