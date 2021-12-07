@@ -1,9 +1,11 @@
 @(userdata: List[publicUserProfile], repo: List[publicUserRepo])
-@main("Github's public information"){
+@main("Public information"){
 
 <body>
+<h1 style="font-family: verdana; text-align:center">User's Public Information and Repositories</h1>
 <div>
-    <table border="1" width="70%"  style=" border-collapse: collapse; text-align:center;  column-width: 100">
+    <table border="1" width="100%"  style=" border-collapse: collapse; text-align:center;  column-width: 100; font-family: verdana">
+
         <thead style="height:50px">
         <tr>
             <th>User Name</th>
@@ -39,23 +41,23 @@
         </tbody>
     </table>
 </div>
-
 <div>
-    <table border="1" width="70%"  style=" border-collapse: collapse; text-align:center;  column-width: 100">
+    <table border="1" width="100%"  style=" border-collapse: collapse; text-align:center;  column-width: 100; font-family: verdana">
         <thead style="height:50px">
         <tr>
             <th>Repositories</th>
         </tr>
         </thead>
 
-        <tbody>
+        <tbody >
         @for(x<-repo){
         <tr>
-            <td>@x.getRepoNames</td>
+            <td ><a href=" ">@x.getRepoNames</a></td>
         </tr>
         }
         </tbody>
     </table>
 </div>
+
 </body>
 }

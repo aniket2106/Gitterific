@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.inject.Named;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.Map;
-
+import akka.actor.*;
 import static akka.pattern.Patterns.ask;
 import scala.compat.java8.FutureConverters;
 
@@ -46,13 +47,14 @@ import scala.compat.java8.FutureConverters;
  * 
  * @author Group Task
  */
+@Singleton
 public class HomeController extends Controller {
 
+	final ActorRef userProfileActor;
 	@Inject
 	WSClient wsClient;
 
 	GithubClient githubClient;
-	userProfile profile = new userProfile();
 	userRepo userRepo = new userRepo();
 	final Logger logger = LoggerFactory.getLogger("play");
 
@@ -62,8 +64,9 @@ public class HomeController extends Controller {
 	 * Controller Constructor
 	 */
 	@Inject
-	public HomeController(@Named("requestActor") ActorRef requestActor) {
+	public HomeController(@Named("requestActor") ActorRef requestActor, ActorSystem system) {
 		this.requestActor = requestActor;
+		userProfileActor = system.actorOf(userProfile.getProps());
 		this.githubClient = new GithubClient();
 	}
 
@@ -125,10 +128,18 @@ public class HomeController extends Controller {
 	 * @return html file with user's public github information and repositories
 	 * @author Aniket Tailor
 	 */
-	public CompletionStage<Result> getUserProfile(String username) {
-		return CompletableFuture.supplyAsync(() -> profile.getData(username)).thenCombine(
-				CompletableFuture.supplyAsync(() -> userRepo.getData(username)),
-				(userdata, repo) -> ok(views.html.publicInformation.render(userdata, repo)));
+	public CompletionStage<Result> getUserProfile(String username){
+		return FutureConverters.toJava(ask(userProfileActor, username, Integer. MAX_VALUE))
+				.thenApply(response -> {
+					List<publicUserProfile> userdata = null;
+					List<publicUserRepo> repo = null;
+					try{
+						userdata = (List<publicUserProfile>) response;
+						repo = userRepo.getData(username);
+					}catch(Exception e){
+					}
+					return ok(views.html.publicInformation.render(userdata,repo));
+				});
 	}
 	
 	/**
