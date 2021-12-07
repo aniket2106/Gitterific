@@ -11,6 +11,7 @@ GET     /search/topic/:topic        controllers.HomeController.repoByTopic(topic
 
 GET     /:key                       controllers.HomeController.getUserProfile(key: String)
 GET     /repo/statistics					controllers.HomeController.stats
+GET     /h/ws                         controllers.WebSocketController.ws
 
 
 # Map static resources from the /public folder to the /assets URL path
