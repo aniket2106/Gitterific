@@ -8,19 +8,44 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-
+import akka.actor.*;
+import akka.japi.*;
 import models.publicUserProfile;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
 /**
  *<p> This userProfile class fetches user's public github information</p>
+ * @author: Aniket Tailor
  */
-public class userProfile{
+public class userProfile extends AbstractActor{
 
     String API = "https://api.github.com/users/";
     HttpResponse response = null;
-    List<String> l = new ArrayList<>();
+
+
+    public static class AuthorKey{
+        public final String name;
+
+        public AuthorKey(String name){
+            this.name = name;
+        }
+    }
+
+    public static Props getProps(){
+        return Props.create(userProfile.class);
+    }
+
+    @Override
+    public Receive createReceive(){
+        return receiveBuilder()
+                .match(String.class, a -> {
+                    List<publicUserProfile> pup = getData(a);
+                    sender().tell(pup, self());
+                })
+                .build();
+    }
+
 
     /**
      * <p>Trying to get the data using github's API</p>
