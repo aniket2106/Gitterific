@@ -16,6 +16,16 @@ public class SearchResults {
     @JsonProperty("items")
     private List<SearchResultItem> items = null;
 
+    protected String query;
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
     public SearchResults() {
     }
 
