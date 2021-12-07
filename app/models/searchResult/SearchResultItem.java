@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -39,6 +40,16 @@ public class SearchResultItem {
     
     @JsonProperty("snippet")
     private Snippet snippet;
+
+    private String query;
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
 
     public SearchResultItem() {
     }
@@ -119,5 +130,18 @@ public class SearchResultItem {
                 ",Snippet=" + snippet +
                 ", full_name=" + fullName +
                 ", node_id=" + nodeId + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SearchResultItem searchResultItem = (SearchResultItem) o;
+        return Objects.equals(nodeId, searchResultItem.nodeId) && Objects.equals(query, searchResultItem.query);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodeId, query);
     }
 }
