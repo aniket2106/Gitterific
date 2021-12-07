@@ -151,6 +151,14 @@ public class HomeController extends Controller {
 				CompletableFuture.supplyAsync(() -> userRepo.getData(username)),
 				(userdata, repo) -> ok(views.html.publicInformation.render(userdata, repo)));
 	}
+	
+	/**
+	 * 
+	 * @param user It represents the github name of the user.
+	 * @param repo It represents the name of the repository.
+	 * @return It returns Map of individual word and its count in all issue titles
+	 * @author Karansinh Matroja
+	 */
 
 	public CompletionStage<Result> stats(String user, String repo) {
 		if (this.githubClient.getWsClient() == null) {
@@ -171,11 +179,13 @@ public class HomeController extends Controller {
 			Stream<IssueItem> issueStream = Stream.of(issues);
 
 			Map<String, Integer> issueMap = issueStream.map(issue -> issue.getTitle().split("\\s+"))
-					.flatMap(Arrays::stream).filter(word -> word.length() > 1)
-					.collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
-			issueMap = issueMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-							LinkedHashMap::new));
+											.flatMap(Arrays::stream)
+											.filter(word -> word.length() > 1)
+											.collect(Collectors.toMap(i -> i.toLowerCase(), i -> 1, Integer::sum));
+			
+			issueMap = issueMap.entrySet().stream()
+					   .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+					   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b,LinkedHashMap::new));
 
 			/*
 			 * for (Map.Entry<String, Integer> entry : issueMap.entrySet()) {
