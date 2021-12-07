@@ -93,4 +93,14 @@ public class HomeControllerTest extends WithApplication {
         Result result = route(app, request);
         assertEquals(OK, result.status());
     }
+    
+    @Test
+    public void testStats() {
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(GET)
+                .uri("/repo/Geal/Geal%2Frust-syslog/stats");
+
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+    }
 }

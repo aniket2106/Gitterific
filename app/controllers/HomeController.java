@@ -159,23 +159,23 @@ public class HomeController extends Controller {
         	
         	Stream<IssueItem> issueStream = Stream.of(issues);
            
-            Map<String, Integer> map = issueStream
+            Map<String, Integer> issueMap = issueStream
                     .map(issue -> issue.getTitle().split("\\s+"))
                     .flatMap(Arrays::stream)
                     .filter(word -> word.length() > 1)
                     .collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
-            map = map.entrySet()
+            issueMap = issueMap.entrySet()
                     .stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            for (Map.Entry<String, Integer> entry : issueMap.entrySet()) {
                 System.out.println(entry.getKey() + ":" + entry.getValue());
             }
             
           
            // repoDetail.setIssueItems(Arrays.asList(issues));
-   		 	return ok(views.html.statistics.render()); 
+   		 	return ok(views.html.statistics.render(issueMap)); 
         });
 	}
 	
