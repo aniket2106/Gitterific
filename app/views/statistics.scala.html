@@ -1,4 +1,5 @@
-
+@(issueMap: Map[String, Integer])
+ 
 
 <html lang="en">
     <head>
@@ -25,15 +26,18 @@
     <body>
         <h1>Word Level Statistics</h1>
         <table>
-       
+            @if(issueMap != null && issueMap.size() > 0) {
                 <tr>
                     <th><b>Word</b></th>
                     <th>Count</th>
                 </tr>
-                
-                    <tr><td>n </td>
-                        <td> t</td></tr>
-            
+                @for((token, count) <- issueMap) {
+                    <tr><td>@token </td>
+                        <td> @count</td></tr>
+                }
+            } else {
+                <h2 style="color: red">Error: Not Found</h2>
+            }
         </table>
     </body>
 </html>
