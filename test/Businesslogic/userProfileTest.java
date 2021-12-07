@@ -1,4 +1,4 @@
-import Businesslogic;
+import Businesslogic.*;
 import models.publicUserProfile;
 import java.io.IOException;
 import org.junit.Test;
