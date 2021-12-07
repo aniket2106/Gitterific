@@ -7,10 +7,14 @@ import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
 import models.*;
 import Businesslogic.*;
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import models.searchResult.SearchResults;
 import play.mvc.*;
+import repoByTopicActors.TopicActorMessages.TopicRepoItems;
+import repoByTopicActors.TopicActorMessages.TopicRequestActorCreate;
+import repoByTopicActors.RequestActor;
 import service.GithubApi;
 import play.api.libs.json.Json;
 import play.libs.streams.ActorFlow;
@@ -19,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +33,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.Map;
+
+import static akka.pattern.Patterns.ask;
+import scala.compat.java8.FutureConverters;
 
 /**
  * This controller contains an action to handle HTTP requests to the
@@ -47,12 +56,14 @@ public class HomeController extends Controller {
 	userRepo userRepo = new userRepo();
 	final Logger logger = LoggerFactory.getLogger("play");
 
-	private static int counter = 1;
+	private final ActorRef requestActor;
 
 	/**
 	 * Controller Constructor
 	 */
-	public HomeController() {
+	@Inject
+	public HomeController(@Named("requestActor") ActorRef requestActor) {
+		this.requestActor = requestActor;
 		this.githubClient = new GithubClient();
 	}
 
@@ -93,14 +104,13 @@ public class HomeController extends Controller {
 	 * @return Returns top 10 topics of the repository
 	 * @author Keta Thakkar
 	 */
-	public CompletionStage<Result> repoByTopic(String topic) {
-		if (this.githubClient.getWsClient() == null) {
-			this.githubClient.setWsClient(wsClient);
-		}
-		CompletionStage<SearchResults> reposByTopic = this.githubClient.fetchReposByTopic(topic);
-		return reposByTopic.thenApply(repos -> {
-			// logger.info(repos.toString());
-			return ok(views.html.repoByTopic.render(repos, topic));
+	public CompletionStage<Result> repoByTopic(Http.Request request, String topic) {
+
+		TopicRequestActorCreate config = new TopicRequestActorCreate(topic);
+
+		return FutureConverters.toJava(ask(requestActor, config, 5000)).thenApply((Object response) -> {
+			final TopicRepoItems test = (TopicRepoItems) response;
+			return ok(views.html.repoByTopic.render(test.searchResults, topic));
 		});
 	}
 
@@ -120,6 +130,14 @@ public class HomeController extends Controller {
 				CompletableFuture.supplyAsync(() -> userRepo.getData(username)),
 				(userdata, repo) -> ok(views.html.publicInformation.render(userdata, repo)));
 	}
+	
+	/**
+	 * 
+	 * @param user It represents the github name of the user.
+	 * @param repo It represents the name of the repository.
+	 * @return It returns Map of individual word and its count in all issue titles
+	 * @author Karansinh Matroja
+	 */
 
 	public CompletionStage<Result> stats(String user, String repo) {
 		if (this.githubClient.getWsClient() == null) {
@@ -140,11 +158,13 @@ public class HomeController extends Controller {
 			Stream<IssueItem> issueStream = Stream.of(issues);
 
 			Map<String, Integer> issueMap = issueStream.map(issue -> issue.getTitle().split("\\s+"))
-					.flatMap(Arrays::stream).filter(word -> word.length() > 1)
-					.collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
-			issueMap = issueMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-							LinkedHashMap::new));
+											.flatMap(Arrays::stream)
+											.filter(word -> word.length() > 1)
+											.collect(Collectors.toMap(i -> i.toLowerCase(), i -> 1, Integer::sum));
+			
+			issueMap = issueMap.entrySet().stream()
+					   .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+					   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b,LinkedHashMap::new));
 
 			/*
 			 * for (Map.Entry<String, Integer> entry : issueMap.entrySet()) {

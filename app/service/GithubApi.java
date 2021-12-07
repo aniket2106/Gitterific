@@ -7,6 +7,8 @@ public interface GithubApi {
 
     CompletionStage<WSResponse> fetchRepos(String searchKey);
 
+    CompletionStage<WSResponse> fetchReposByTopic(String topic);
+
 	// CompletionStage<JsonNode> fetchRepoDetail(WSClient wsClient, String userName, String repoName);
     
     // CompletionStage<JsonNode> fetchIssues(WSClient wsClient, String userName, String repoName);

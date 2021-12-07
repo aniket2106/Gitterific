@@ -35,4 +35,10 @@ public class GithubService {
             .thenApplyAsync(wsResponse -> Json.fromJson(wsResponse, SearchResults.class));
     }
 
+    public CompletionStage<SearchResults> getReposByTopic(final String topic) {
+        return githubImplementation.fetchReposByTopic(topic)
+            .thenApplyAsync(WSResponse -> Json.parse(WSResponse.getBody()))
+            .thenApplyAsync(wsResponse -> Json.fromJson(wsResponse, SearchResults.class));
+    }
+
 }

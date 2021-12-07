@@ -7,7 +7,7 @@ GET     /                           controllers.HomeController.index(request: Re
 
 GET     /repo/:user/:repo           controllers.HomeController.issues(user: String, repo: String)
 
-GET     /search/topic/:topic        controllers.HomeController.repoByTopic(topic: String)
+GET     /search/topic/:topic        controllers.HomeController.repoByTopic(request: Request, topic: String)
 
 GET     /:key                       controllers.HomeController.getUserProfile(key: String)
 

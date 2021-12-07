@@ -18,13 +18,20 @@ public class GithubImplementation implements GithubApi {
         this.ws = ws;
     }
 
-    @Override
     public CompletionStage<WSResponse> fetchRepos(String searchKey) {
         return ws.url(BASE_URL + "search/repositories")
             .addQueryParameter("sort", "updated")
             .addQueryParameter("order", "desc")
             .addQueryParameter("per_page", "10")
             .addQueryParameter("q", searchKey).get();
+    }
+
+    public CompletionStage<WSResponse> fetchReposByTopic(String topic) {
+        return ws.url(BASE_URL + "search/repositories")
+            .addQueryParameter("sort", "updated")
+            .addQueryParameter("order", "desc")
+            .addQueryParameter("per_page", "10")
+            .addQueryParameter("q", "topic:" + topic).get();
     }
 
 }
