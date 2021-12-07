@@ -121,7 +121,7 @@ public class SearchResultsActor extends AbstractActorWithTimers {
         return githubService;
     }
 
-    public void setTwitterService(GithubService githubService) {
+    public void setGithubService(GithubService githubService) {
         this.githubService = githubService;
     }
 }
