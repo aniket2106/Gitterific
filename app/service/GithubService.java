@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import models.repoDetails.IssueItem;
+import models.repoDetails.RepoDetail;
 import models.searchResult.SearchResults;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
@@ -39,6 +41,18 @@ public class GithubService {
         return githubImplementation.fetchReposByTopic(topic)
             .thenApplyAsync(WSResponse -> Json.parse(WSResponse.getBody()))
             .thenApplyAsync(wsResponse -> Json.fromJson(wsResponse, SearchResults.class));
+    }
+
+    public CompletionStage<RepoDetail> getRepoDetails(final String userName, final String repoName) {
+        return githubImplementation.fetchRepoDetail(userName, repoName)
+            .thenApplyAsync(response -> Json.parse(response.getBody()))
+            .thenApplyAsync(response -> Json.fromJson(response, RepoDetail.class));
+    }
+
+    public CompletionStage<IssueItem[]> getRepoIssues(final String userName, final String repoName) {
+        return githubImplementation.fetchIssues(userName, repoName)
+            .thenApplyAsync(response -> Json.parse(response.getBody()))
+            .thenApplyAsync(response -> Json.fromJson(response, IssueItem[].class));
     }
 
 }

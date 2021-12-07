@@ -34,4 +34,13 @@ public class GithubImplementation implements GithubApi {
             .addQueryParameter("q", "topic:" + topic).get();
     }
 
+    public CompletionStage<WSResponse> fetchRepoDetail(String userName, String repoName) {
+        return ws.url(BASE_URL + "repos/" + userName + "/" + repoName).get();
+    }
+
+    public CompletionStage<WSResponse> fetchIssues(String userName, String repoName) {
+        return ws.url(BASE_URL + "repos/" + userName + "/" + repoName + "/issues")
+		    .addQueryParameter("per_page", "20").get();
+    }
+
 }
