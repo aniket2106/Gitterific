@@ -47,7 +47,7 @@ public class RequestActor extends AbstractActor {
         return receiveBuilder()
                 .match(TopicActorMessages.TopicRequestActorCreate.class, message -> {
                     logger.info("Registering actor {}", message);
-                    userActor = sender();
+                    userActor = getSender();
                     watchSearchResult(message);
                 })
                 .build();
@@ -56,11 +56,10 @@ public class RequestActor extends AbstractActor {
     public CompletionStage<Void> watchSearchResult(TopicActorMessages.TopicRequestActorCreate message) {
         topic = message.topic;
         return githubService.getReposByTopic(topic).thenAcceptAsync(searchResults -> {
-            
             TopicActorMessages.TopicRepoItems repoItem =
                     new TopicActorMessages.TopicRepoItems(searchResults, topic);
           
-            userActor.tell("asdfasfd", self());
+            userActor.tell(repoItem, self());
         });
     }
 

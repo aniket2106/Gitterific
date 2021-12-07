@@ -108,31 +108,10 @@ public class HomeController extends Controller {
 
 		TopicRequestActorCreate config = new TopicRequestActorCreate(topic);
 
-		// CompletionStage<TopicRepoItems> result = ask(requestActor, replyTo -> new )
-
 		return FutureConverters.toJava(ask(requestActor, config, 5000)).thenApply((Object response) -> {
 			final TopicRepoItems test = (TopicRepoItems) response;
-			logger.info("1111lskadjfl;kasdjf;laksdjfl;asjdf");
-			logger.info(test.topic);
-			return ok(views.html.index.render(request));
-			// return ok(views.html.repoByTopic.render(response, topic));
+			return ok(views.html.repoByTopic.render(test.searchResults, topic));
 		});
-
-		// CompletableFuture<TopicRepoItems> wsResponse = ask(requestActor, config, 5000).toCompletableFuture();
-
-		// return wsResponse.thenApply(response -> {
-		// 	logger.info(response.searchResults.toString());
-		// 	return ok(views.html.repoByTopic.render(response.searchResults, topic));
-		// });
-
-		// if (this.githubClient.getWsClient() == null) {
-		// 	this.githubClient.setWsClient(wsClient);
-		// }
-		// CompletionStage<SearchResults> reposByTopic = this.githubClient.fetchReposByTopic(topic);
-		// return reposByTopic.thenApply(repos -> {
-		// 	// logger.info(repos.toString());
-		// 	return ok(views.html.repoByTopic.render(repos, topic));
-		// });
 	}
 
 	/**
