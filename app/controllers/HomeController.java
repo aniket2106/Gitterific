@@ -7,10 +7,14 @@ import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
 import models.*;
 import Businesslogic.*;
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import models.searchResult.SearchResults;
 import play.mvc.*;
+import repoByTopicActors.TopicActorMessages.TopicRepoItems;
+import repoByTopicActors.TopicActorMessages.TopicRequestActorCreate;
+import repoByTopicActors.RequestActor;
 import service.GithubApi;
 import play.api.libs.json.Json;
 import play.libs.streams.ActorFlow;
@@ -19,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +33,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.Map;
+
+import static akka.pattern.Patterns.ask;
+import scala.compat.java8.FutureConverters;
 
 /**
  * This controller contains an action to handle HTTP requests to the
@@ -47,12 +56,14 @@ public class HomeController extends Controller {
 	userRepo userRepo = new userRepo();
 	final Logger logger = LoggerFactory.getLogger("play");
 
-	private static int counter = 1;
+	private final ActorRef requestActor;
 
 	/**
 	 * Controller Constructor
 	 */
-	public HomeController() {
+	@Inject
+	public HomeController(@Named("requestActor") ActorRef requestActor) {
+		this.requestActor = requestActor;
 		this.githubClient = new GithubClient();
 	}
 
@@ -93,15 +104,35 @@ public class HomeController extends Controller {
 	 * @return Returns top 10 topics of the repository
 	 * @author Keta Thakkar
 	 */
-	public CompletionStage<Result> repoByTopic(String topic) {
-		if (this.githubClient.getWsClient() == null) {
-			this.githubClient.setWsClient(wsClient);
-		}
-		CompletionStage<SearchResults> reposByTopic = this.githubClient.fetchReposByTopic(topic);
-		return reposByTopic.thenApply(repos -> {
-			// logger.info(repos.toString());
-			return ok(views.html.repoByTopic.render(repos, topic));
+	public CompletionStage<Result> repoByTopic(Http.Request request, String topic) {
+
+		TopicRequestActorCreate config = new TopicRequestActorCreate(topic);
+
+		// CompletionStage<TopicRepoItems> result = ask(requestActor, replyTo -> new )
+
+		return FutureConverters.toJava(ask(requestActor, config, 5000)).thenApply((Object response) -> {
+			final TopicRepoItems test = (TopicRepoItems) response;
+			logger.info("1111lskadjfl;kasdjf;laksdjfl;asjdf");
+			logger.info(test.topic);
+			return ok(views.html.index.render(request));
+			// return ok(views.html.repoByTopic.render(response, topic));
 		});
+
+		// CompletableFuture<TopicRepoItems> wsResponse = ask(requestActor, config, 5000).toCompletableFuture();
+
+		// return wsResponse.thenApply(response -> {
+		// 	logger.info(response.searchResults.toString());
+		// 	return ok(views.html.repoByTopic.render(response.searchResults, topic));
+		// });
+
+		// if (this.githubClient.getWsClient() == null) {
+		// 	this.githubClient.setWsClient(wsClient);
+		// }
+		// CompletionStage<SearchResults> reposByTopic = this.githubClient.fetchReposByTopic(topic);
+		// return reposByTopic.thenApply(repos -> {
+		// 	// logger.info(repos.toString());
+		// 	return ok(views.html.repoByTopic.render(repos, topic));
+		// });
 	}
 
 	/**
