@@ -1,3 +1,15 @@
+/**
+ * The javascript class handles all incoming and outgoing websocket
+ * messages from the front-end and back-end.
+ */
+
+/**
+ * Opens a web socket connector to the server.
+ * Listen for incoming messages in the form of JSON.
+ * It then parses and adjust the messages received from the Twitter API.
+ */
+
+
 (function() {
     var parseRepos;
     console.log("Entered js file");
