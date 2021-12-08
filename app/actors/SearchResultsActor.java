@@ -19,7 +19,10 @@ import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This actor contains a set of searchResults internally that may be used by all websocket clients.
 
+ */
 public class SearchResultsActor extends AbstractActorWithTimers {
 
     @Inject
@@ -33,19 +36,31 @@ public class SearchResultsActor extends AbstractActorWithTimers {
 
     private Set<SearchResults> searchResultsItems;
 
+     /**
+     * Dummy inner class used for the timer
+     */
     public static final class Tick {
     }
 
+    /**
+     * Start the timer, create a Tick every 10 seconds
+     */
     @Override
     public void preStart() {
         getTimers().startPeriodicTimer("Timer", new Tick(),
                 Duration.create(10, TimeUnit.SECONDS));
     }
-
+     /**
+     * Constructor
+     */
     public SearchResultsActor() {
         this.userActor = null;
         this.query = null;
     }
+      /**
+     * Handle the incoming messages
+     * @return Receive received messages
+     */
 
     @Override
     public Receive createReceive() {
@@ -71,6 +86,11 @@ public class SearchResultsActor extends AbstractActorWithTimers {
     }
 
 
+    /**
+     * watchSearchResult message handling
+     * @param message message to handle
+     * @return CompletionStage of Void
+     */
     public CompletionStage<Void> watchSearchResult(Messages.WatchSearchResults message) {
         // Set the query
         query = message.query;
@@ -91,6 +111,10 @@ public class SearchResultsActor extends AbstractActorWithTimers {
         });
     }
 
+     /**
+     * watchSearchResult message handling
+     * @return CompletionStage of void
+     */
     public CompletionStage<Void> tickSearchResults() {
         return githubService.getRepos(query).thenAcceptAsync(searchResults -> {
             this.searchResultsItems = new HashSet<>();
@@ -101,26 +125,50 @@ public class SearchResultsActor extends AbstractActorWithTimers {
         });
     }
 
+     /**
+     * Keyword getter
+     * @return String query
+     */
     public String getQuery() {
         return query;
     }
 
+     /**
+     * Setter for the query
+     * @param query String query
+     */
     public void setQuery(String query) {
         this.query = query;
     }
 
+     /**
+     * Setter for the statuses
+     * @param statuses Set of Statuses statuses
+     */
     public void setStatuses(Set<SearchResults> searchResultsItems) {
         this.searchResultsItems = searchResultsItems;
     }
 
+     /**
+     * Statuses getter
+     * @return Set of Status statuses
+     */
     public Set<SearchResults> getStatuses() {
         return searchResultsItems;
     }
+     /**
+     * Get GithubService
+     * @return GithubService githubService
+     */
 
     public GithubService getGithubService() {
         return githubService;
     }
 
+     /**
+     * Set GithubService
+     * @param github githubService
+     */
     public void setGithubService(GithubService githubService) {
         this.githubService = githubService;
     }
