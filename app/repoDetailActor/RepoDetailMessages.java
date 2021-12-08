@@ -4,6 +4,13 @@ package repoDetailActor;
 import models.repoDetails.IssueItem;
 import models.repoDetails.RepoDetail;
 
+/**
+ * A message protocol of the actor class. It contains all information relevant for making
+ * a request to get the repository details and issues of the repositories.
+ * @author dhruvimodi
+ *
+ */
+
 public final class RepoDetailMessages {
     
     public static final class CreateActorRepoDetail {
