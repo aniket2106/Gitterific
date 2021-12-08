@@ -17,6 +17,12 @@ import models.searchResult.SearchResults;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 
+
+/**
+ * Fetches data from GithubApi using GithubImplementation and then passes into respective model objects
+ * @author dhruvimodi
+ */
+
 public class GithubService {
     
     @Inject
@@ -26,10 +32,18 @@ public class GithubService {
 
     private ObjectMapper mapper;
 
+    /**
+     * Default constructor
+     */
     public GithubService() {
         mapper = new ObjectMapper();
     }
 
+    /**
+     * Parse the repositories for a keyword
+     * @param searchKeyword keyword
+     * @return CompletionStage of a SearchResult
+     */
     public CompletionStage<SearchResults> getRepos(final String searchKeyword) {
         logger.info("Fetching repos from github for keyword: " + searchKeyword);
         return githubImplementation.fetchRepos(searchKeyword)
@@ -37,18 +51,35 @@ public class GithubService {
             .thenApplyAsync(wsResponse -> Json.fromJson(wsResponse, SearchResults.class));
     }
 
+    /**
+     * Parse the repositories by topic for a keyword
+     * @param  keywordtopic
+     * @return CompletionStage of a SearchResult
+     */
     public CompletionStage<SearchResults> getReposByTopic(final String topic) {
         return githubImplementation.fetchReposByTopic(topic)
             .thenApplyAsync(WSResponse -> Json.parse(WSResponse.getBody()))
             .thenApplyAsync(wsResponse -> Json.fromJson(wsResponse, SearchResults.class));
     }
 
+    /**
+     * Parse the repository detsils for a keyword
+     * @param userName keyword
+     * @param repoName keyword
+     * @return CompletionStage of a SearchResult
+     */
     public CompletionStage<RepoDetail> getRepoDetails(final String userName, final String repoName) {
         return githubImplementation.fetchRepoDetail(userName, repoName)
             .thenApplyAsync(response -> Json.parse(response.getBody()))
             .thenApplyAsync(response -> Json.fromJson(response, RepoDetail.class));
     }
 
+    /**
+     * Parse the issues for a keyword
+     * @param userName keyword
+     * @param repoName keyword
+     * @return CompletionStage of a SearchResult
+     */
     public CompletionStage<IssueItem[]> getRepoIssues(final String userName, final String repoName) {
         return githubImplementation.fetchIssues(userName, repoName)
             .thenApplyAsync(response -> Json.parse(response.getBody()))
