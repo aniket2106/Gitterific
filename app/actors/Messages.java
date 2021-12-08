@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import models.searchResult.SearchResults;
 
-
+/**
+ * Class containing all the Messages sent/received by the actor
+ */
 public final class Messages {
 
     private final static Logger logger = LoggerFactory.getLogger("play");
@@ -17,6 +19,9 @@ public final class Messages {
     public static final class UserParentActorCreate {
         public final String id;
 
+    /**
+     * Create UserParentActor Message
+     */
         public UserParentActorCreate(String id) {
             logger.info("Created actor with id" + id);
             this.id = requireNonNull(id);
@@ -27,7 +32,9 @@ public final class Messages {
             return "UserParentActorCreate(" + id + ")";
         }
     }
-
+    /**
+     * WatchSearchResults Message
+     */
     public static final class WatchSearchResults {
         public final String query;
 
@@ -41,6 +48,9 @@ public final class Messages {
         }
     }
 
+     /**
+     * UnwatchSearchResults Message
+     */
     public static final class UnwatchSearchResults {
         public final String query;
 
@@ -53,7 +63,9 @@ public final class Messages {
             return "UnwatchSearchResults(" + query + ")";
         }
     }
-
+     /**
+     * SearchResults according to the query param passed
+     */
     public static final class RepoItem {
         public final Set<SearchResults> searchResults;
         public final String query;
@@ -69,6 +81,9 @@ public final class Messages {
         }
     }
 
+    /**
+     * RegisterActor Message
+     */
     public static final class RegisterActor {
         @Override
         public String toString() {
@@ -76,6 +91,10 @@ public final class Messages {
         }
     }
 
+     /**
+     * Override toString for the Messages class
+     * @return string "Messages"
+     */
     @Override
     public String toString() {
         return "Messages";
