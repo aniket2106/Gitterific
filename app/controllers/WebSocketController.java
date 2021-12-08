@@ -24,6 +24,9 @@ import scala.concurrent.duration.Duration;
 import scala.compat.java8.FutureConverters;
 import static akka.pattern.Patterns.ask;
 
+/**
+ * This controller contains the WebSocket
+ */
 
 public class WebSocketController extends Controller {
     private final Timeout t = new Timeout(Duration.create(10, TimeUnit.SECONDS));
@@ -32,12 +35,18 @@ public class WebSocketController extends Controller {
 
     private final ActorRef userParentActor;
 
-
+    /**
+     * Constructor
+     * @param userParentActor userParentActor provided by Guice
+     */
     @Inject
     public WebSocketController(@Named("userParentActor") ActorRef userParentActor) {
         this.userParentActor = userParentActor;
     }
-
+     /**
+     * Generates the WebSocket
+     * @return WebSocket
+     */
     public WebSocket ws() {
         return WebSocket.Json.acceptOrResult(request -> {
             if (sameOriginCheck(request)) {
@@ -52,12 +61,21 @@ public class WebSocketController extends Controller {
         });
     }
 
+     /**
+      * Checks whether WebSocket can be created or not
+      * @param throwable failed connecting to WebSocket
+      */
     private Either<Result, Flow<JsonNode, JsonNode, ?>> logException(Throwable throwable) {
         logger.error("Cannot create websocket", throwable);
         Result result = Results.internalServerError("error");
         return Either.Left(result);
     }
 
+     /**
+     * Checks that the WebSocket comes from the same origin. This is required to check for the Cross-site WebSocket Hijacking.
+     * @param rh Http Request header
+     * @return boolean
+     */
     private boolean sameOriginCheck(Http.RequestHeader rh) {
         final Optional<String> origin = rh.header("Origin");
 
@@ -70,16 +88,31 @@ public class WebSocketController extends Controller {
         }
     }
 
+     /**
+     * Validate the origin
+     * @param origin origin for validation
+     * @return true if origin matches localhost:9000 
+     */
     private boolean originMatches(String origin) {
         return origin.contains("localhost:9000");
     }
 
+    /**
+     * Return a Forbidden result if the same origin check fails
+     * @return CompletionStage failed
+     */
     private CompletionStage<Either<Result, Flow<JsonNode, JsonNode, ?>>> forbiddenResult() {
         final Result forbidden = Results.forbidden("forbidden");
         final Either<Result, Flow<JsonNode, JsonNode, ?>> left = Either.Left(forbidden);
 
         return CompletableFuture.completedFuture(left);
     }
+
+     /**
+     * Create a UserParentActor with a given ID
+     * @param request Request to handle
+     * @return CompletionStage
+     */
 
     @SuppressWarnings("unchecked")
     private CompletionStage<Flow<JsonNode, JsonNode, NotUsed>> wsFutureFlow(Http.RequestHeader request) {
