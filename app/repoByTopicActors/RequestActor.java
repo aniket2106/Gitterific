@@ -21,7 +21,9 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
 
-
+/**
+ * Actor to handle requests to fetch repos by topic
+ */
 public class RequestActor extends AbstractActor {
     
     @Inject
@@ -37,11 +39,17 @@ public class RequestActor extends AbstractActor {
         return Props.create(RequestActor.class, () -> new RequestActor());
     }
 
+    /**
+     * Actor class constructor
+     */
     public RequestActor() {
         this.userActor = null;
         this.topic = null;
     }
 
+    /**
+     * Overriding Receive method to add a message handler for the actor
+     */
     @Override
     public Receive createReceive() {
         return receiveBuilder()
@@ -53,6 +61,10 @@ public class RequestActor extends AbstractActor {
                 .build();
     }
 
+    /**
+     * Method to watch github api http call and reply the response to requesting actor
+     * @param message Immutable message used to create actor
+     */
     public CompletionStage<Void> watchSearchResult(TopicActorMessages.TopicRequestActorCreate message) {
         topic = message.topic;
         return githubService.getReposByTopic(topic).thenAcceptAsync(searchResults -> {
@@ -63,18 +75,32 @@ public class RequestActor extends AbstractActor {
         });
     }
 
+    /**
+     * Getter for topic
+     */
     public String getTopic() {
         return topic;
     }
 
+    /**
+     * Setter for topic
+     * @param topic Topic
+     */
     public void setTopic(String topic) {
         this.topic = topic;
     }
 
+    /**
+     * Getter for githubService
+     */
     public GithubService getGithubService() {
         return githubService;
     }
 
+    /**
+     * Setter for githubService
+     * @param githubService Github service
+     */
     public void setGithubService(GithubService githubService) {
         this.githubService = githubService;
     }
