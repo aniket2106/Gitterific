@@ -17,7 +17,10 @@ import scala.compat.java8.FutureConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * UserParentActor for UserActor class
 
+ */
 public class UserParentActor extends AbstractActor implements InjectedActorSupport {
 
     private final Timeout timeout = new Timeout(10, TimeUnit.SECONDS);
@@ -27,12 +30,21 @@ public class UserParentActor extends AbstractActor implements InjectedActorSuppo
 
     private final UserActor.Factory childFactory;
 
+    /**
+     * Create the default UserParentActor
+     * Called by the WebSocketController
+     * @param childFactory factory for creating a UserActor
+     */
     @Inject
     public UserParentActor(UserActor.Factory childFactory) {
         this.childFactory = childFactory;
         this.query = "";
     }
 
+    /**
+     * Receive Akka messages
+     * @return Receive receiving the messages
+     */
     @Override
     public Receive createReceive() {
         return receiveBuilder()
