@@ -4,6 +4,12 @@ import java.util.concurrent.CompletionStage;
 
 import play.libs.ws.WSResponse;
 
+/**	
+ * Interface for the GithubApi requests
+ * @author dhruvimodi
+ *
+ */
+
 
 public interface GithubApi {
 
