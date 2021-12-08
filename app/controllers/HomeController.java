@@ -38,6 +38,8 @@ import java.util.Map;
 import akka.actor.*;
 import static akka.pattern.Patterns.ask;
 import scala.compat.java8.FutureConverters;
+import java.util.Objects;
+
 
 /**
  * This controller contains an action to handle HTTP requests to the
@@ -132,8 +134,12 @@ public class HomeController extends Controller {
 		TopicRequestActorCreate config = new TopicRequestActorCreate(topic);
 
 		return FutureConverters.toJava(ask(requestActor, config, 5000)).thenApply((Object response) -> {
-			final TopicRepoItems test = (TopicRepoItems) response;
-			return ok(views.html.repoByTopic.render(test.searchResults, topic));
+			final TopicRepoItems responseMessage = (TopicRepoItems) response;
+			if (Objects.nonNull(responseMessage.searchResults.getItems())) {
+				return ok(views.html.repoByTopic.render(responseMessage.searchResults, topic));
+			} else {
+				return ok(views.html.limiterror.render());
+			}
 		});
 	}
 
