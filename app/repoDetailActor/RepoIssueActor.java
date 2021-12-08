@@ -19,6 +19,15 @@ import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This <code>Actor</code> class is used to perform list of issues whenever a message request is received.
+ * The class also extends the <code>AbstractActor</code>.
+ * The class uses the message protocol {@link RepoDetailMessage} to communicate 
+ * to the Github service for the GithubApi to get information operation.
+ * @author dhruvimodi
+ *
+ */
+
 public class RepoIssueActor extends AbstractActor {
     
     @Inject
