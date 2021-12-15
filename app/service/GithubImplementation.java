@@ -11,6 +11,8 @@ import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
+import models.searchResult.SearchResults;
+import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
@@ -50,12 +52,14 @@ public class GithubImplementation implements GithubApi {
      * @param topic to search for topics
      * @return CompletionStage of a WSResponse.
      */
-    public CompletionStage<WSResponse> fetchReposByTopic(String topic) {
+    public CompletionStage<SearchResults> fetchReposByTopic(String topic) {
         return ws.url(BASE_URL + "search/repositories")
             .addQueryParameter("sort", "updated")
             .addQueryParameter("order", "desc")
             .addQueryParameter("per_page", "10")
-            .addQueryParameter("q", "topic:" + topic).get();
+            .addQueryParameter("q", "topic:" + topic).get()
+            .thenApply(WSResponse -> Json.parse(WSResponse.getBody()))
+            .thenApply(wsResponse -> Json.fromJson(wsResponse, SearchResults.class)).toCompletableFuture();
     }
 
     /**

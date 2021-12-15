@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class RequestActor extends AbstractActor {
         return receiveBuilder()
                 .match(TopicActorMessages.TopicRequestActorCreate.class, message -> {
                     logger.info("Registering actor {}", message);
-                    userActor = getSender();
+                    userActor = sender();
                     watchSearchResult(message);
                 })
                 .build();
@@ -67,6 +68,7 @@ public class RequestActor extends AbstractActor {
      */
     public CompletionStage<Void> watchSearchResult(TopicActorMessages.TopicRequestActorCreate message) {
         topic = message.topic;
+        logger.info("Fetching data from github API");
         return githubService.getReposByTopic(topic).thenAcceptAsync(searchResults -> {
             TopicActorMessages.TopicRepoItems repoItem =
                     new TopicActorMessages.TopicRepoItems(searchResults, topic);

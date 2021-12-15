@@ -31,3 +31,5 @@ libraryDependencies += "org.powermock" % "powermock-module-junit4" % "2.0.9" % T
 
 libraryDependencies += "org.powermock" % "powermock-api-mockito2" % "2.0.9" % Test
 
+libraryDependencies += "org.easytesting" % "fest-reflect" % "1.4" % Test
+

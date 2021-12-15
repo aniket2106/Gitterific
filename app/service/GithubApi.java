@@ -2,6 +2,9 @@ package service;
 
 import java.util.concurrent.CompletionStage;
 
+import com.google.inject.ImplementedBy;
+
+import models.searchResult.SearchResults;
 import play.libs.ws.WSResponse;
 
 /**	
@@ -10,12 +13,12 @@ import play.libs.ws.WSResponse;
  *
  */
 
-
+@ImplementedBy(GithubMockServiceImpl.class)
 public interface GithubApi {
 
     CompletionStage<WSResponse> fetchRepos(String searchKey);
 
-    CompletionStage<WSResponse> fetchReposByTopic(String topic);
+    CompletionStage<SearchResults> fetchReposByTopic(String topic);
 
 	CompletionStage<WSResponse> fetchRepoDetail(String userName, String repoName);
     

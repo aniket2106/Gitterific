@@ -143,7 +143,7 @@ public class HomeController extends Controller {
 		});
 	}
 
-	/**
+	/**  
 	 * <p>
 	 * This controller is designed to search user's public github information and
 	 * repositories

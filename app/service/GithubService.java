@@ -35,8 +35,10 @@ public class GithubService {
     /**
      * Default constructor
      */
-    public GithubService() {
+    @Inject
+    public GithubService(GithubApi githubImplementation) {
         mapper = new ObjectMapper();
+        this.githubImplementation = githubImplementation;
     }
 
     /**
@@ -57,9 +59,7 @@ public class GithubService {
      * @return CompletionStage of a SearchResult
      */
     public CompletionStage<SearchResults> getReposByTopic(final String topic) {
-        return githubImplementation.fetchReposByTopic(topic)
-            .thenApplyAsync(WSResponse -> Json.parse(WSResponse.getBody()))
-            .thenApplyAsync(wsResponse -> Json.fromJson(wsResponse, SearchResults.class));
+        return githubImplementation.fetchReposByTopic(topic);
     }
 
     /**
