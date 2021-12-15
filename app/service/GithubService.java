@@ -35,10 +35,9 @@ public class GithubService {
     /**
      * Default constructor
      */
-    @Inject
-    public GithubService(GithubApi githubImplementation) {
+    public GithubService() {
         mapper = new ObjectMapper();
-        this.githubImplementation = githubImplementation;
+        // this.githubImplementation = githubImplementation;
     }
 
     /**
@@ -59,6 +58,7 @@ public class GithubService {
      * @return CompletionStage of a SearchResult
      */
     public CompletionStage<SearchResults> getReposByTopic(final String topic) {
+        logger.info("Received request in github service");
         return githubImplementation.fetchReposByTopic(topic);
     }
 

@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RequestActor extends AbstractActor {
     
-    @Inject
+    @Autowired
     private GithubService githubService;
 
     private ActorRef userActor;
@@ -46,6 +46,7 @@ public class RequestActor extends AbstractActor {
     public RequestActor() {
         this.userActor = null;
         this.topic = null;
+        // this.githubService = new GithubService();
     }
 
     /**
@@ -66,13 +67,13 @@ public class RequestActor extends AbstractActor {
      * Method to watch github api http call and reply the response to requesting actor
      * @param message Immutable message used to create actor
      */
-    public CompletionStage<Void> watchSearchResult(TopicActorMessages.TopicRequestActorCreate message) {
+    public void watchSearchResult(TopicActorMessages.TopicRequestActorCreate message) {
         topic = message.topic;
         logger.info("Fetching data from github API");
-        return githubService.getReposByTopic(topic).thenAcceptAsync(searchResults -> {
+        githubService.getReposByTopic(topic).thenAcceptAsync(searchResults -> {
             TopicActorMessages.TopicRepoItems repoItem =
                     new TopicActorMessages.TopicRepoItems(searchResults, topic);
-          
+            logger.info("Replying to sender with response");
             userActor.tell(repoItem, self());
         });
     }

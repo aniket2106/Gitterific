@@ -13,7 +13,6 @@ import play.libs.ws.WSResponse;
  *
  */
 
-@ImplementedBy(GithubMockServiceImpl.class)
 public interface GithubApi {
 
     CompletionStage<WSResponse> fetchRepos(String searchKey);
